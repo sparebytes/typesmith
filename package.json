@@ -1,11 +1,11 @@
 {
-  "name": "ts-valid",
+  "name": "typesmith",
   "version": "0.2.0",
   "private": false,
   "author": "Franklin Davenport <sparebytes@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sparebytes/ts-valid.git"
+    "url": "https://github.com/sparebytes/typesmith.git"
   },
   "license": "MIT",
   "keywords": [

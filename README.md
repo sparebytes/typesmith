@@ -1,4 +1,4 @@
-# ts-valid
+# typesmith
 
 Inspired by [typescript-is](https://www.npmjs.com/package/typescript-is).
 
