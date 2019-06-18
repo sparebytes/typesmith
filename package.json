@@ -1,6 +1,6 @@
 {
   "name": "ts-valid",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "author": "Franklin Davenport <sparebytes@gmail.com>",
   "repository": {
@@ -12,7 +12,7 @@
     "clean": "rimraf dist",
     "build": "yarn run clean && yarn run build:once",
     "build:once": "tsc --project tsconfig.json",
-    "build:release": "yarn build && cpx LICENSE dist && package-json-reducer -s \"scripts devDependencies\" -o dist/package.json package.json",
+    "build:release": "yarn build && cpx {README.md,LICENSE} dist && package-json-reducer -s \"scripts devDependencies\" -o dist/package.json package.json",
     "build:watch": "tsc --project tsconfig.json --watch",
     "debug": "node -r ts-node/register/transpile-only --inspect=127.0.0.1:43926 --inspect-brk ./debug/debug.ts",
     "prettier": "prettier --write \"./src/**/*.ts\" \"./test/**/*.ts\" \"./debug/**/*.ts\"",
