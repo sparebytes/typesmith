@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build - Launch",
+            "type": "node",
+            "request": "launch",
+            "args": ["${workspaceRoot}/ts-valid/debug/debug.ts"],
+            "stopOnEntry": false,
+            "cwd": "${workspaceRoot}/ts-valid",
+            "protocol": "inspector",
+            "runtimeArgs": [
+                "--nolazy", 
+                "-r",
+                "ts-node/register/transpile-only"
+            ],
+            "sourceMaps": true,
+            "smartStep": true,
+            // "skipFiles": [
+            //     "<node_internals>/**/*.js",
+            //     "node_modules/**/*.js",
+            // ]
+        },
+        {
+            "name": "Build - Attach",
+            "type": "node",
+            "request": "attach",
+            "port": 43926,
+            "restart": true,
+            "protocol": "inspector",
+            "stopOnEntry": false,
+            "cwd": "${workspaceRoot}/ts-valid",
+            "sourceMaps": true,
+            "smartStep": true,
+            // "skipFiles": [
+            //     "<node_internals>/**/*.js",
+            //     "node_modules/**/*.js",
+            // ]
+        },
+    ]
+}
