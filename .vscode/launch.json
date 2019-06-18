@@ -8,9 +8,9 @@
             "name": "Build - Launch",
             "type": "node",
             "request": "launch",
-            "args": ["${workspaceRoot}/ts-valid/debug/debug.ts"],
+            "args": ["${workspaceRoot}/debug/debug.ts"],
             "stopOnEntry": false,
-            "cwd": "${workspaceRoot}/ts-valid",
+            "cwd": "${workspaceRoot}",
             "protocol": "inspector",
             "runtimeArgs": [
                 "--nolazy", 
@@ -32,7 +32,7 @@
             "restart": true,
             "protocol": "inspector",
             "stopOnEntry": false,
-            "cwd": "${workspaceRoot}/ts-valid",
+            "cwd": "${workspaceRoot}",
             "sourceMaps": true,
             "smartStep": true,
             // "skipFiles": [

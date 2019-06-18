@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../index";
+import { assertTypeFn } from "../dist";
 import { Box } from "./example-types/box";
 
 const INCORRECT = "_*INCORRECT*_";

@@ -21,11 +21,17 @@ delete configParseResult.options.outDir;
 delete configParseResult.options.outFile;
 delete configParseResult.options.declaration;
 
-const inFile = path.resolve("test", "simple.test.ts");
+const inFile = path.resolve(__dirname, "debug-example.ts");
 const program = ts.createProgram([inFile], configParseResult.options);
 const inSourceFile = program.getSourceFile(inFile);
+if (inSourceFile == null) {
+  throw new Error(`inSourceFile is null. Is "${inFile}" a valid path?`);
+}
 
-const visitorContext = getVisitorContext(program, {});
+const visitorContext = getVisitorContext(program);
+// const visitorContext = getVisitorContext(program, {
+//   declarationPath: path.resolve(__dirname, "../src"),
+// });
 
 function visitNodeAndChildren(node: ts.Node) {
   const transformedNode = transformNode(node, visitorContext);

@@ -1,8 +1,45 @@
 {
-  "name": "ts-valid-monorepo",
-  "version": "0.1.0",
+  "name": "ts-valid",
+  "version": "0.1.1",
   "private": true,
   "author": "Franklin Davenport <sparebytes@gmail.com>",
   "license": "MIT",
-  "workspaces": ["./ts-valid"]
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "yarn run clean && yarn run build:once",
+    "build:once": "tsc --project tsconfig.json",
+    "build:release": "yarn build && cpx LICENSE dist && package-json-reducer -s \"scripts devDependencies\" -o dist/package.json package.json",
+    "build:watch": "tsc --project tsconfig.json --watch",
+    "debug": "node -r ts-node/register/transpile-only --inspect=127.0.0.1:43926 --inspect-brk ./debug/debug.ts",
+    "prettier": "prettier --write \"./src/**/*.ts\" \"./test/**/*.ts\" \"./debug/**/*.ts\"",
+    "test:clean": "rimraf test/**/*.js",
+    "test:build": "ttsc --project tsconfig.test.json",
+    "test:build:watch": "yarn run test:build --watch",
+    "test:run": "ava",
+    "test": "yarn run test:clean && yarn run test:build && yarn run test:run"
+  },
+  "dependencies": {
+    "ajv": "^6.10.0",
+    "fp-ts": "^1.18.2",
+    "json-schema": "^0.2.3",
+    "nested-error-stacks": "^2.1.0",
+    "ts-json-schema-generator": "^0.46.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=2.9.1"
+  },
+  "devDependencies": {
+    "@types/json-schema": "^7.0.3",
+    "@types/nested-error-stacks": "^2.1.0",
+    "@types/node": "*",
+    "ava": "^2.1.0",
+    "cpx": "^1.5.0",
+    "package-json-reducer": "1.0.18",
+    "prettier": "~1.18.2",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.17.0",
+    "ttypescript": "^1.5.7",
+    "typescript": "^3.5.2"
+  }
 }

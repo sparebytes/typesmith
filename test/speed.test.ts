@@ -1,6 +1,6 @@
 import test from "ava";
 import { performance } from "perf_hooks";
-import { assertTypeFn } from "../index";
+import { assertTypeFn } from "../dist";
 import { BTree } from "./example-types/b-tree";
 
 test("Speed", t => {

@@ -11,7 +11,7 @@
     "declaration": false,
     "plugins": [
       {
-        "transform": "./src/transformer.ts",
+        "transform": "./dist/transformer/index.js",
         "options": {
           "coerceTypes": true
         }

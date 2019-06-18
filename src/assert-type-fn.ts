@@ -1,4 +1,6 @@
-import { Either } from "fp-ts/lib/Either";
+import * as Ajv from "ajv";
+import { Either, left, right } from "fp-ts/lib/Either";
+
 export interface AssertTypeOptions {
   /**
    * remove additional properties - see example in Filtering data. This option is not used if schema is added with addMetaSchema method.
@@ -29,4 +31,19 @@ export interface AssertTypeOptions {
    */
   coerceTypes: boolean | "array";
 }
-export function assertTypeFn<T>(assertTypeOptions?: Partial<AssertTypeOptions>): (object: any) => Either<Error, T>;
+
+export function assertTypeFn<T>(assertTypeOptions?: Partial<AssertTypeOptions>): (object: any) => Either<Ajv.ErrorObject[], T>;
+export function assertTypeFn<T>(...args: any[]): (object: any) => Either<Ajv.ErrorObject[], T> {
+  const n2 = args[args.length - 3];
+  const n1 = args[args.length - 2];
+  const n0 = args[args.length - 1];
+  if (n2 !== "\u2663") {
+    throw new Error("assertTypeFn(): Requires transformation via ttsc or ttypescript.");
+  }
+  const ajv = new Ajv(n1);
+  const typeValidateFn = ajv.compile(n0);
+  return object => {
+    const isValid = typeValidateFn(object);
+    return isValid ? right(object) : left(typeValidateFn.errors as Ajv.ErrorObject[]);
+  };
+}

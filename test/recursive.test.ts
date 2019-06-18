@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../index";
+import { assertTypeFn } from "../dist";
 import { BTree } from "./example-types/b-tree";
 
 export type NumberTree = BTree<number>;

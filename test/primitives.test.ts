@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../index";
+import { assertTypeFn } from "../dist";
 
 test("Simple String", t => {
   const assertString = assertTypeFn<string>();

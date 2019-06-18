@@ -1,0 +1,9 @@
+.git
+.vscode
+node_modules
+test
+src
+.*
+ava.config.js
+tsconfig.json
+tsconfig.test.json

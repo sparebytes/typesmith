@@ -1,7 +1,7 @@
 import * as path from "path";
 import { Config, Context, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
 import * as ts from "typescript";
-import { AssertTypeOptions } from "../index";
+import { AssertTypeOptions } from "../assert-type-fn";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
 import NestedError = require("nested-error-stacks");
 
@@ -9,7 +9,19 @@ export type PartialVisitorContext = {
   program: ts.Program;
   schemaGenerator: SchemaGenerator;
   checker: ts.TypeChecker;
+  declarationPath: string;
   defaultValidationOptions: AssertTypeOptions;
+};
+
+const baseSchemaGeneratorConfig: Config = {
+  expose: "all", // "all" | "none" | "export";
+  topRef: false,
+  jsDoc: "extended", // "none" | "extended" | "basic";
+  sortProps: true,
+  strictTuples: true,
+  skipTypeCheck: false,
+  path: "",
+  type: "",
 };
 
 const baseDefaultValidationOptions: AssertTypeOptions = {
@@ -18,33 +30,40 @@ const baseDefaultValidationOptions: AssertTypeOptions = {
   coerceTypes: false,
 };
 
-export function getVisitorContext(program: ts.Program, options?: { [Key: string]: unknown }) {
+export function getVisitorContext(program: ts.Program, options?: { [Key: string]: any }) {
+  const sgOptions = ((options && options.options) || {}) as Partial<Config>;
   const schemGeneratorConfig: Config = {
-    expose: "all", // "all" | "none" | "export";
-    topRef: false,
-    jsDoc: "extended", // "none" | "extended" | "basic";
-    sortProps: true,
-    strictTuples: true,
-    skipTypeCheck: false,
-    // extraJsonTags?: string[];
-    path: "",
-    type: "",
+    expose: sgOptions.expose != null ? sgOptions.expose : baseSchemaGeneratorConfig.expose,
+    topRef: sgOptions.topRef != null ? sgOptions.topRef : baseSchemaGeneratorConfig.topRef,
+    jsDoc: sgOptions.jsDoc != null ? sgOptions.jsDoc : baseSchemaGeneratorConfig.jsDoc,
+    sortProps: sgOptions.sortProps != null ? sgOptions.sortProps : baseSchemaGeneratorConfig.sortProps,
+    strictTuples: sgOptions.strictTuples != null ? sgOptions.strictTuples : baseSchemaGeneratorConfig.strictTuples,
+    skipTypeCheck: sgOptions.skipTypeCheck != null ? sgOptions.skipTypeCheck : baseSchemaGeneratorConfig.skipTypeCheck,
+    path: baseSchemaGeneratorConfig.path,
+    type: baseSchemaGeneratorConfig.type,
   };
   const schemGeneratorNodeParser = createParser(program, schemGeneratorConfig);
   const schemGeneratorTypeFormatter = createFormatter(schemGeneratorConfig);
   const schemaGenerator = new SchemaGenerator(program, schemGeneratorNodeParser, schemGeneratorTypeFormatter);
 
-  const o = ((options && options.options) || {}) as Partial<AssertTypeOptions>;
+  const declarationPath =
+    options != null && options.options != null && typeof options.options.declarationPath === "string"
+      ? options.options.declarationPath
+      : path.resolve(path.join(__dirname, ".."));
+
+  const vOptions = ((options && options.options) || {}) as Partial<AssertTypeOptions>;
+  const defaultValidationOptions = {
+    removeAdditional: "removeAdditional" in vOptions ? vOptions.removeAdditional : baseDefaultValidationOptions.removeAdditional,
+    useDefaults: "useDefaults" in vOptions ? vOptions.useDefaults : baseDefaultValidationOptions.useDefaults,
+    coerceTypes: "coerceTypes" in vOptions ? vOptions.coerceTypes : baseDefaultValidationOptions.coerceTypes,
+  } as AssertTypeOptions;
 
   const visitorContext: PartialVisitorContext = {
     program,
     checker: program.getTypeChecker(),
     schemaGenerator: schemaGenerator,
-    defaultValidationOptions: {
-      removeAdditional: "removeAdditional" in o ? o.removeAdditional : baseDefaultValidationOptions.removeAdditional,
-      useDefaults: "useDefaults" in o ? o.useDefaults : baseDefaultValidationOptions.useDefaults,
-      coerceTypes: "coerceTypes" in o ? o.coerceTypes : baseDefaultValidationOptions.coerceTypes,
-    } as AssertTypeOptions,
+    declarationPath: declarationPath,
+    defaultValidationOptions: defaultValidationOptions,
   };
 
   return visitorContext;
@@ -102,10 +121,11 @@ function transformNodeAndChildren(
 export function transformNode(node: ts.Node, visitorContext: PartialVisitorContext): ts.Node {
   if (ts.isCallExpression(node)) {
     const signature = visitorContext.checker.getResolvedSignature(node);
+
     if (
       signature !== undefined &&
       signature.declaration !== undefined &&
-      path.resolve(signature.declaration.getSourceFile().fileName) === path.resolve(path.join(__dirname, "..", "index.d.ts")) &&
+      path.dirname(path.resolve(signature.declaration.getSourceFile().fileName)) === visitorContext.declarationPath &&
       node.typeArguments !== undefined &&
       node.typeArguments.length === 1
     ) {

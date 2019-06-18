@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../../index";
+import { assertTypeFn } from "../../dist";
 import { BTree } from "../example-types/b-tree";
 
 // A runtime error is thrown during validation because the generated JSON Schema is invalid.
