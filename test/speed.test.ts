@@ -32,9 +32,7 @@ test("Speed", t => {
   const count = 100000;
   const start = performance.now();
   for (let i = 0; i < count; i++) {
-    assertNumberTree(value).getOrElseL(e => {
-      throw e;
-    });
+    assertNumberTree(value).unwrap();
   }
   const end = performance.now();
   const avgTime = (end - start) / count;

@@ -1,7 +1,7 @@
 import * as path from "path";
 import { Config, Context, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
 import * as ts from "typescript";
-import { AssertTypeOptions } from "../assert-type-fn";
+import { AssertTypeOptions } from "../transformable/assert-type-fn";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
 import NestedError = require("nested-error-stacks");
 
@@ -49,7 +49,7 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
   const declarationPath =
     options != null && options.options != null && typeof options.options.declarationPath === "string"
       ? options.options.declarationPath
-      : path.resolve(path.join(__dirname, ".."));
+      : path.resolve(path.join(__dirname, "..", "transformable"));
 
   const vOptions = ((options && options.options) || {}) as Partial<AssertTypeOptions>;
   const defaultValidationOptions = {

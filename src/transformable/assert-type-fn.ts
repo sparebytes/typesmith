@@ -1,5 +1,5 @@
 import * as Ajv from "ajv";
-import { Either, left, right } from "fp-ts/lib/Either";
+import { AssertTypeFailure, AssertTypeResult, AssertTypeSuccess } from "../assert-type-result";
 
 export interface AssertTypeOptions {
   /**
@@ -32,8 +32,8 @@ export interface AssertTypeOptions {
   coerceTypes: boolean | "array";
 }
 
-export function assertTypeFn<T>(assertTypeOptions?: Partial<AssertTypeOptions>): (object: any) => Either<Ajv.ErrorObject[], T>;
-export function assertTypeFn<T>(...args: any[]): (object: any) => Either<Ajv.ErrorObject[], T> {
+export function assertTypeFn<T>(assertTypeOptions?: Partial<AssertTypeOptions>): (object: any) => AssertTypeResult<T>;
+export function assertTypeFn<T>(...args: any[]): (object: any) => AssertTypeResult<T> {
   const n2 = args[args.length - 3];
   const n1 = args[args.length - 2];
   const n0 = args[args.length - 1];
@@ -44,6 +44,6 @@ export function assertTypeFn<T>(...args: any[]): (object: any) => Either<Ajv.Err
   const typeValidateFn = ajv.compile(n0);
   return object => {
     const isValid = typeValidateFn(object);
-    return isValid ? right(object) : left(typeValidateFn.errors as Ajv.ErrorObject[]);
+    return isValid ? new AssertTypeSuccess<T>(object) : new AssertTypeFailure<T>(typeValidateFn.errors as Ajv.ErrorObject[]);
   };
 }

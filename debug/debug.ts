@@ -30,7 +30,7 @@ if (inSourceFile == null) {
 
 const visitorContext = getVisitorContext(program);
 // const visitorContext = getVisitorContext(program, {
-//   declarationPath: path.resolve(__dirname, "../src"),
+//   declarationPath: path.resolve(__dirname, "../src/transformable"),
 // });
 
 function visitNodeAndChildren(node: ts.Node) {
