@@ -1,8 +1,12 @@
 {
   "name": "ts-valid",
   "version": "0.1.1",
-  "private": true,
+  "private": false,
   "author": "Franklin Davenport <sparebytes@gmail.com>",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/sparebytes/ts-valid.git"
+  },
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
@@ -16,7 +20,8 @@
     "test:build": "ttsc --project tsconfig.test.json",
     "test:build:watch": "yarn run test:build --watch",
     "test:run": "ava",
-    "test": "yarn run test:clean && yarn run test:build && yarn run test:run"
+    "test": "yarn run test:clean && yarn run test:build && yarn run test:run",
+    "release": "yarn build:release && yarn test && cd dist && npm publish"
   },
   "dependencies": {
     "ajv": "^6.10.0",
