@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/sparebytes/typesmith/compare/v0.4.0...v0.5.0) (2019-06-19)
+
+
+### Features
+
+* lazy compilation of validation function ([dd1e8a7](https://github.com/sparebytes/typesmith/commit/dd1e8a7))
+* pull custom json keywords from jsdoc ([2b2c5ab](https://github.com/sparebytes/typesmith/commit/2b2c5ab))
+
+
+### Tests
+
+* add string length jsdoc test ([83cfb75](https://github.com/sparebytes/typesmith/commit/83cfb75))
+* fix validatable test not unwrapping ([cfbbb5e](https://github.com/sparebytes/typesmith/commit/cfbbb5e))
+* test [@instance](https://github.com/instance)Of keyword with Date ([4f5a9ef](https://github.com/sparebytes/typesmith/commit/4f5a9ef))
+
+
+
 ## [0.4.0](https://github.com/sparebytes/typesmith/compare/v0.3.1...v0.4.0) (2019-06-19)
 
 
