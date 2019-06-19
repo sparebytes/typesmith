@@ -7,11 +7,11 @@ export const assertNumberTree = assertTypeFn<NumberTree>();
 
 test("Recursive Type Valid", t => {
   const value = {
-    value: "5",
+    value: 5,
     left: {
-      value: "2",
+      value: 2,
       left: {
-        value: "1",
+        value: 1,
         left: null,
       },
     },
@@ -22,9 +22,9 @@ test("Recursive Type Valid", t => {
 
 test("Recursive Type Invalid", t => {
   const value = {
-    value: "5",
+    value: 5,
     left: {
-      value: "2",
+      value: 2,
       left: {
         value: {},
         left: null,

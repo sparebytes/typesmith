@@ -20,9 +20,9 @@ test("Property String", t => {
   _assertDeep("Correct", "Correct");
 
   // Coerced
-  _assertDeep(true, "true");
-  _assertDeep(false, "false");
-  _assertDeep(-1, "-1");
+  _assertDeep(true, INCORRECT);
+  _assertDeep(false, INCORRECT);
+  _assertDeep(-1, INCORRECT);
 
   // Invalid
   _assertDeep(/test/, INCORRECT);
@@ -39,9 +39,9 @@ test("Property Number", t => {
   _assertDeep(1337.1, 1337.1);
 
   // Coerced
-  _assertDeep(true, 1);
-  _assertDeep(false, 0);
-  _assertDeep("1337", 1337);
+  _assertDeep(true, INCORRECT);
+  _assertDeep(false, INCORRECT);
+  _assertDeep("1337", INCORRECT);
 
   // Invalid
   _assertDeep("Incorrect", INCORRECT);
@@ -60,9 +60,9 @@ test("Property Integer", t => {
   _assertDeep(1337, 1337);
 
   // Coerced
-  _assertDeep(false, 0);
-  _assertDeep(true, 1);
-  _assertDeep("1337", 1337);
+  _assertDeep(false, INCORRECT);
+  _assertDeep(true, INCORRECT);
+  _assertDeep("1337", INCORRECT);
 
   // Invalid
   _assertDeep(1337.1, INCORRECT);
@@ -80,10 +80,10 @@ test("Property Boolean", t => {
   _assertDeep(true, true);
 
   // Coerced
-  _assertDeep("true", true);
-  _assertDeep("false", false);
-  _assertDeep(1, true);
-  _assertDeep(0, false);
+  _assertDeep("true", INCORRECT);
+  _assertDeep("false", INCORRECT);
+  _assertDeep(1, INCORRECT);
+  _assertDeep(0, INCORRECT);
 
   // Invalid
   _assertDeep(1337, INCORRECT);

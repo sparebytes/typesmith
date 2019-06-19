@@ -13,7 +13,7 @@
       {
         "transform": "./dist/transformer/index.js",
         "options": {
-          "coerceTypes": true
+          "coerceTypes": false
         }
       }
     ]
