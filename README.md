@@ -40,3 +40,5 @@ npm i --save-dev ttypescript
 ## ✔ Todo
 
 - [ ] feat(assertTypeFn): allow validation options to be overridden
+- [ ] feat: validation of date objects
+  - Use [ajv-keywords](ajv-keywords) to accomplish this. `ts-json-schema-generator` may need to be modified to emit the appropriate keyword.
