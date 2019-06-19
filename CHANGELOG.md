@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/sparebytes/typesmith/compare/v0.3.0...v0.3.1) (2019-06-19)
+
+
+### Tests
+
+* add test for dates issue ([cdd3c48](https://github.com/sparebytes/typesmith/commit/cdd3c48))
+
+
+
 ## [0.3.0](https://github.com/sparebytes/typesmith/compare/v0.2.2...v0.3.0) (2019-06-19)
 
 
