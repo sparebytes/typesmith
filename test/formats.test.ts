@@ -71,6 +71,7 @@ test("Formats Valid", t => {
 
 test("Class Type Json Invalid", t => {
   const foos = [
+    { misc: "" },
     { misc: "x" },
     { misc: "2001-01-01" },
     { misc: "555555555" },
@@ -103,6 +104,13 @@ test("Class Type Json Invalid", t => {
     { socialSecurityNumberOptionalHyphenatedString: "55555555" },
   ];
   for (const foo of foos) {
-    t.throws(() => assertFoo(foo).unwrap());
+    try {
+      assertFoo(foo).unwrap()
+      console.error("Value should have failed:", foo)
+      t.fail();
+    }
+    catch (ex) {
+      t.pass();
+    }
   }
 });
