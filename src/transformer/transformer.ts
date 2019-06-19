@@ -35,7 +35,7 @@ export type PartialVisitorContext = {
   schemaGenerator: SchemaGenerator;
   checker: ts.TypeChecker;
   declarationPath: string;
-  defaultValidationOptions: AssertTypeOptions;
+  defaultValidationOptions: Partial<AssertTypeOptions>;
 };
 
 const baseSchemaGeneratorConfig: Config = {
@@ -47,12 +47,6 @@ const baseSchemaGeneratorConfig: Config = {
   skipTypeCheck: false,
   path: "",
   type: "",
-};
-
-const baseDefaultValidationOptions: AssertTypeOptions = {
-  removeAdditional: false,
-  useDefaults: false,
-  coerceTypes: false,
 };
 
 export function getVisitorContext(program: ts.Program, options?: { [Key: string]: any }) {
@@ -79,11 +73,11 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
       : path.resolve(path.join(__dirname, "..", "transformable"));
 
   const vOptions = ((options && options.options) || {}) as Partial<AssertTypeOptions>;
-  const defaultValidationOptions = {
-    removeAdditional: "removeAdditional" in vOptions ? vOptions.removeAdditional : baseDefaultValidationOptions.removeAdditional,
-    useDefaults: "useDefaults" in vOptions ? vOptions.useDefaults : baseDefaultValidationOptions.useDefaults,
-    coerceTypes: "coerceTypes" in vOptions ? vOptions.coerceTypes : baseDefaultValidationOptions.coerceTypes,
-  } as AssertTypeOptions;
+  const defaultValidationOptions: Partial<AssertTypeOptions> = {};
+  if ("removeAdditional" in vOptions) defaultValidationOptions.removeAdditional = vOptions.removeAdditional;
+  if ("useDefaults" in vOptions) defaultValidationOptions.useDefaults = vOptions.useDefaults;
+  if ("coerceTypes" in vOptions) defaultValidationOptions.coerceTypes = vOptions.coerceTypes;
+  if ("lazyCompile" in vOptions) defaultValidationOptions.lazyCompile = vOptions.lazyCompile;
 
   const visitorContext: PartialVisitorContext = {
     program,

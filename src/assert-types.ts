@@ -1,6 +1,7 @@
 import * as Ajv from "ajv";
 import { ErrorObject } from "./ajv-errors";
 import NestedError = require("nested-error-stacks");
+import ajv = require("ajv");
 
 export interface AssertTypeOptions {
   /**
@@ -31,6 +32,14 @@ export interface AssertTypeOptions {
    * - "array" - in addition to coercions between scalar types, coerce scalar data to an array with one element and vice versa (as required by the schema).
    */
   coerceTypes: boolean | "array";
+
+  /**
+   * should the validation function be compiled lazily
+   * Option values:
+   * - false - compile the validation function ASAP
+   * - true (default) - compile the validation function the first time it is used
+   */
+  lazyCompile: boolean;
 }
 
 export class AssertTypeSuccess<T> {
@@ -79,9 +88,20 @@ export type AssertTypeResult<T> = AssertTypeSuccess<T> | AssertTypeFailure<T>;
 
 export type AssertTypeFn<T> = (object: any) => AssertTypeResult<T>;
 
-export function assertTypeFnFactory<T>(options: AssertTypeOptions, jsonSchema: any): AssertTypeFn<T> {
+export function assertTypeFnFactory<T>(options: Partial<AssertTypeOptions>, jsonSchema: any): AssertTypeFn<T> {
   const ajv = new Ajv(options as any);
-  const typeValidateFn = ajv.compile(jsonSchema);
+  let typeValidateFn: ajv.ValidateFunction;
+
+  if (options.lazyCompile === false) {
+    typeValidateFn = ajv.compile(jsonSchema);
+  } else {
+    typeValidateFn = (...args: any[]) => {
+      typeValidateFn = ajv.compile(jsonSchema);
+      return typeValidateFn.apply(null, args as any);
+    };
+    typeValidateFn.schema = jsonSchema;
+  }
+
   return object => {
     const isValid = typeValidateFn(object);
     return isValid ? new AssertTypeSuccess<T>(object) : new AssertTypeFailure<T>(typeValidateFn.errors as Ajv.ErrorObject[]);
