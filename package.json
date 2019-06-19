@@ -28,7 +28,10 @@
     "test:build": "ttsc --project tsconfig.test.json",
     "test:build:watch": "yarn run test:build --watch",
     "test:run": "ava",
+    "test:run:watch": "ava --watch",
+    "test:watch": "concurrently -c \"yellow,blue\" -n \"tb,tr\" \"yarn run test:build:watch\" \"yarn run test:run:watch\"",
     "test": "yarn run test:clean && yarn run test:build && yarn run test:run",
+    "dev": "concurrently -c \"bgYellow,green\" -n \"bld,tst\" \"yarn run build:watch\" \"yarn run test:watch\"",
     "release": "yarn build:release && yarn test && cd dist && npm publish"
   },
   "dependencies": {
@@ -45,6 +48,7 @@
     "@types/nested-error-stacks": "^2.1.0",
     "@types/node": "*",
     "ava": "^2.1.0",
+    "concurrently": "^4.1.0",
     "cpx": "^1.5.0",
     "package-json-reducer": "1.0.18",
     "prettier": "~1.18.2",
