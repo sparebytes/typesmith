@@ -29,7 +29,7 @@ test("Speed", t => {
     },
   };
 
-  const count = 100000;
+  const count = 1000;
   const start = performance.now();
   for (let i = 0; i < count; i++) {
     assertNumberTree(value).unwrap();
