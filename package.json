@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "ajv": "^6.10.0",
+    "ajv-keywords": "^3.4.0",
     "json-schema": "^0.2.3",
     "nested-error-stacks": "^2.1.0",
     "ts-json-schema-generator": "^0.46.0"
