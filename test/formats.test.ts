@@ -16,6 +16,7 @@ import {
 } from "../dist";
 
 export interface Foo {
+  misc?: null | "" | YearMonthString | SocialSecurityNumberString;
   dateTimeStrict?: DateTimeStrict;
   dateTimeString?: DateTimeString;
   timeString?: TimeString;
@@ -34,6 +35,10 @@ const assertFoo = assertTypeFn<Foo>();
 
 test("Formats Valid", t => {
   const foos = [
+    { misc: null },
+    { misc: "" },
+    { misc: "2001-01" },
+    { misc: "555-55-5555" },
     { dateTimeStrict: "2018-11-13T20:20:39+00:00" },
     { dateTimeString: "2018-11-13Z" },
     { dateTimeString: "2018-11-13T20:20:39Z" },
@@ -66,6 +71,9 @@ test("Formats Valid", t => {
 
 test("Class Type Json Invalid", t => {
   const foos = [
+    { misc: "x" },
+    { misc: "2001-01-01" },
+    { misc: "555555555" },
     { dateTimeStrict: "2018-11-X3T20:20:39+00:00" },
     { dateTimeString: "2018-11-13+00" },
     { dateTimeString: "2018-11-13+00:00" },
