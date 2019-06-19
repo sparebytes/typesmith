@@ -1,6 +1,22 @@
 // See https://json-schema.org/understanding-json-schema/reference/string.html
 
 //
+// Numeric
+//
+
+/**
+ * @asType integer
+ * @minimum -9007199254740991
+ * @maximum 9007199254740991
+ **/
+export type Int = number;
+
+/**
+ * @asType integer
+ **/
+export type UnsafeInt = number;
+
+//
 // Date and Time
 //
 
@@ -12,7 +28,7 @@ export type DateTimeStrict = string;
 
 /**
  * Date and time together. For the date to be valid it must parsable by javascript `new Date(...)`.
- * 
+ *
  * Valid:
  * - 2001-12-31Z
  * - 2001-12-31T00:00:00Z
@@ -25,7 +41,7 @@ export type DateTimeStrict = string;
  * - 2001-12-31T00:00:00
  * - 2001-12-31T00:00:00+00
  * - 2001-12-31T00:00:00.000+00
- *          
+ *
  * @pattern ^\d{4}-[01]\d-[0-3]\d(?:Z|T[0-2]\d:[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|\+[0-2]\d\:[0-5]\d?))$
  */
 export type DateTimeString = string;
@@ -77,7 +93,6 @@ export type EmailString = string;
  */
 export type HostnameString = string;
 
-
 //
 // IP Addresses
 //
@@ -94,7 +109,6 @@ export type Ipv4String = string;
  */
 export type Ipv6String = string;
 
-
 //
 // People
 //
@@ -102,17 +116,17 @@ export type Ipv6String = string;
 /**
  * @pattern ^\d{3}-\d{2}-\d{4}$
  */
-export type SocialSecurityNumberString = string
+export type SocialSecurityNumberString = string;
 
 /**
  * @pattern ^\d{9}$
  */
-export type SocialSecurityNumberNonHyphenatedString = string
+export type SocialSecurityNumberNonHyphenatedString = string;
 
 /**
  * @pattern ^\d{3}-?\d{2}-?\d{4}$
  */
-export type SocialSecurityNumberOptionalHyphenatedString = string
+export type SocialSecurityNumberOptionalHyphenatedString = string;
 
 //
 // Unsupported
