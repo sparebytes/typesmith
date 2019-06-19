@@ -17,7 +17,7 @@
     "json-schema"
   ],
   "scripts": {
-    "clean": "rimraf dist/*",
+    "clean": "rimraf dist/* src/**/*.{js,js.map,d.ts}",
     "build": "yarn run clean && yarn run build:once",
     "build:once": "tsc --project tsconfig.json",
     "build:release": "yarn build && cpx {README.md,LICENSE} dist && package-json-reducer -s \"scripts devDependencies\" -o dist/package.json package.json",
