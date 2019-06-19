@@ -8,12 +8,12 @@
  * @asType integer
  * @minimum -9007199254740991
  * @maximum 9007199254740991
- **/
+ */
 export type Int = number;
 
 /**
  * @asType integer
- **/
+ */
 export type UnsafeInt = number;
 
 //
@@ -72,6 +72,16 @@ export type DateString = string;
  * @pattern ^\d{4}-(0[1-9]|1[0-2])$
  */
 export type YearMonthString = string;
+
+/**
+ * @instanceOf "Date"
+ */
+export type DateInstance = Date
+
+/**
+ * Either a DateInstance (object) or a Date string
+ */
+export type DateTimeFlex = DateInstance | DateTimeString;
 
 //
 // Email addresses
