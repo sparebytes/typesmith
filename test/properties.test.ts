@@ -51,7 +51,7 @@ test("Property Number", t => {
 });
 
 test("Property Integer", t => {
-  /** @type integer */
+  /** @asType integer */
   type int = number;
   const assertNumber = assertTypeFn<Box<int>>();
   const _assertDeep = _assertBoxDeep(t, assertNumber);
@@ -63,9 +63,9 @@ test("Property Integer", t => {
   _assertDeep(false, 0);
   _assertDeep(true, 1);
   _assertDeep("1337", 1337);
-  _assertDeep(1337.1, 1337.1);
 
   // Invalid
+  _assertDeep(1337.1, INCORRECT);
   _assertDeep("Incorrect", INCORRECT);
   _assertDeep(/test/, INCORRECT);
   _assertDeep({}, INCORRECT);

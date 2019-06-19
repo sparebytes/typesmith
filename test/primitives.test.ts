@@ -36,7 +36,7 @@ test("Simple Number", t => {
 });
 
 test("Simple Integer", t => {
-  /** @type integer */
+  /** @asType integer */
   type int = number;
   const assertNumber = assertTypeFn<int>();
 
@@ -46,9 +46,9 @@ test("Simple Integer", t => {
   // Coerced
   t.assert(assertNumber(false as any).getOrElse(-1) === false as any);
   t.assert(assertNumber("1337" as any).getOrElse(-1) === "1337" as any);
-  t.assert(assertNumber(1337.1 as any).getOrElse(-1) === 1337.1);
   
   // Invalid
+  t.assert(assertNumber(1337.1 as any).getOrElse(-1) === -1);
   t.assert(assertNumber("Incorrect" as any).getOrElse(-1) === -1);
   t.assert(assertNumber(/test/ as any).getOrElse(-1) === -1);
   t.assert(assertNumber({} as any).getOrElse(-1) === -1);
