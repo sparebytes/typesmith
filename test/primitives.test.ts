@@ -8,7 +8,7 @@ test("Simple String", t => {
 
   // Valid
   t.assert(assertString("Correct" as any).getOrElse(INCORRECT) === "Correct");
-  
+
   // Coerced
   t.assert(assertString(false as any).getOrElse(INCORRECT) === INCORRECT);
   t.assert(assertString(-1 as any).getOrElse(INCORRECT) === INCORRECT);
@@ -48,7 +48,7 @@ test("Simple Integer", t => {
   // Coerced
   t.assert(assertNumber(false as any).getOrElse(INCORRECT) === INCORRECT);
   t.assert(assertNumber("1337" as any).getOrElse(INCORRECT) === INCORRECT);
-  
+
   // Invalid
   t.assert(assertNumber(1337.1 as any).getOrElse(INCORRECT) === INCORRECT);
   t.assert(assertNumber(INCORRECT as any).getOrElse(INCORRECT) === INCORRECT);
@@ -73,7 +73,6 @@ test("Simple Boolean", t => {
   t.assert(assertBoolean({} as any).getOrElse(INCORRECT) === INCORRECT);
   t.assert(assertBoolean([] as any).getOrElse(INCORRECT) === INCORRECT);
 });
-
 
 test("Simple DateTime String", t => {
   /** @format date-time */

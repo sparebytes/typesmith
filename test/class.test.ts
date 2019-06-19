@@ -18,7 +18,7 @@ export class Address {
 
 export class Person {
   name!: Name;
-  address?: Address | null
+  address?: Address | null;
 }
 
 export const assertPerson = assertTypeFn<Person>();
@@ -28,7 +28,7 @@ test("Class Type Json Valid", t => {
     name: {
       first: "Jill",
       last: "Smith",
-    }
+    },
   };
   assertPerson(person).unwrap();
   t.pass();

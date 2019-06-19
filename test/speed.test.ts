@@ -37,6 +37,6 @@ test("Speed", t => {
   const end = performance.now();
   const avgTime = (end - start) / count;
   const avgTimeMax = 0.01;
-  
+
   t.assert(avgTimeMax > avgTime, `Average time must be below ${avgTimeMax}ms but was ${avgTime}`);
 });
