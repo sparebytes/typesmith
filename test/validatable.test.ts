@@ -5,29 +5,25 @@ import { getValidatableFn, Validatable } from "../dist";
 class Thingy {
   foo!: "bar";
 }
-getValidatableFn(Thingy);
+const assertThingy = getValidatableFn(Thingy)!;
 
 test("@Validatable JSON Valid", t => {
-  const assertThingy = getValidatableFn(Thingy)!;
-  assertThingy({ foo: "bar" });
+  assertThingy({ foo: "bar" }).unwrap();
   t.pass();
 });
 
 test("@Validatable Instance Valid", t => {
-  const assertThingy = getValidatableFn(Thingy)!;
   const thingy = new Thingy();
   thingy.foo = "bar";
-  assertThingy(thingy);
+  assertThingy(thingy).unwrap();
   t.pass();
 });
 
 test("@Validatable JSON Invalid", t => {
-  const assertThingy = getValidatableFn(Thingy)!;
   t.throws(() => assertThingy({ foo: "baz" }).unwrap());
 });
 
 test("@Validatable Instance Invalid", t => {
-  const assertThingy = getValidatableFn(Thingy)!;
   const thingy = new Thingy();
   thingy.foo = "baz" as any;
   t.throws(() => assertThingy(thingy).unwrap());
