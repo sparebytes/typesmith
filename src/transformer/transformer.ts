@@ -1,7 +1,7 @@
 import * as path from "path";
 import { Config, Context, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
 import * as ts from "typescript";
-import { AssertTypeOptions } from "../transformable/assert-type-fn";
+import { AssertTypeOptions } from "../assert-types";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
 import NestedError = require("nested-error-stacks");
 
@@ -118,26 +118,53 @@ function transformNodeAndChildren(
   );
 }
 
+const sourceFileDirMap = new WeakMap<ts.SourceFile, string>();
+
+function getSourceFileDir(sourceFile: ts.SourceFile): string {
+  let result = sourceFileDirMap.get(sourceFile);
+  if (result == null) {
+    result = path.dirname(path.resolve(sourceFile.fileName));
+    sourceFileDirMap.set(sourceFile, result);
+  }
+  return result;
+}
+
 export function transformNode(node: ts.Node, visitorContext: PartialVisitorContext): ts.Node {
   if (ts.isCallExpression(node)) {
     const signature = visitorContext.checker.getResolvedSignature(node);
-
     if (
       signature !== undefined &&
       signature.declaration !== undefined &&
-      path.dirname(path.resolve(signature.declaration.getSourceFile().fileName)) === visitorContext.declarationPath &&
-      node.typeArguments !== undefined &&
-      node.typeArguments.length === 1
+      getSourceFileDir(signature.declaration.getSourceFile()) === visitorContext.declarationPath
     ) {
-      const typeArgument = node.typeArguments[0];
-      const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
+      const name = visitorContext.checker.getTypeAtLocation(signature.declaration).symbol.name;
+      if (name === "assertTypeFn" && node.typeArguments !== undefined && node.typeArguments.length === 1) {
+        const typeArgument = node.typeArguments[0];
+        const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
 
-      return ts.updateCall(node, node.expression, node.typeArguments, [
-        ...node.arguments,
-        ts.createStringLiteral("\u2663"),
-        jsonToLiteralExpression(visitorContext.defaultValidationOptions),
-        jsonToLiteralExpression(typeNodeJsonSchema),
-      ]);
+        return ts.updateCall(node, node.expression, node.typeArguments, [
+          ...node.arguments,
+          ts.createStringLiteral("\u2663"),
+          jsonToLiteralExpression(visitorContext.defaultValidationOptions),
+          jsonToLiteralExpression(typeNodeJsonSchema),
+        ]);
+      } else if (name == "Validatable") {
+        const decorator = node.parent;
+        if (ts.isDecorator(decorator)) {
+          const classDeclaration = decorator.parent;
+          if (ts.isClassDeclaration(classDeclaration)) {
+            const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, classDeclaration);
+            return ts.updateCall(node, node.expression, node.typeArguments, [
+              ...node.arguments,
+              ts.createStringLiteral("\u2663"),
+              jsonToLiteralExpression(visitorContext.defaultValidationOptions),
+              jsonToLiteralExpression(typeNodeJsonSchema),
+            ]);
+          }
+        }
+
+        console.warn(`Typesmith: unexpected call "${name}"`);
+      }
 
       // import * as Ajv from "ajv";
       // var ajv = new Ajv({ sourceCode: true });
