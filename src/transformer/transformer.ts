@@ -5,6 +5,31 @@ import { AssertTypeOptions } from "../assert-types";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
 import NestedError = require("nested-error-stacks");
 
+const defaultExtraJsonTags = [
+  "typeof",
+  "instanceOf",
+  "range",
+  "exclusiveRange",
+  "regexp",
+  "formatMaximum",
+  "formatMinimum",
+  "formatExclusiveMaximum",
+  "formatExclusiveMinimum",
+  "transform",
+  "uniqueItemProperties",
+  "allRequired",
+  "anyRequired",
+  "oneRequired",
+  "patternRequired",
+  "prohibited",
+  "deepProperties",
+  "deepRequired",
+  "select",
+  "selectCases",
+  "selectDefault",
+  "dynamicDefaults",
+];
+
 export type PartialVisitorContext = {
   program: ts.Program;
   schemaGenerator: SchemaGenerator;
@@ -32,6 +57,7 @@ const baseDefaultValidationOptions: AssertTypeOptions = {
 
 export function getVisitorContext(program: ts.Program, options?: { [Key: string]: any }) {
   const sgOptions = ((options && options.options) || {}) as Partial<Config>;
+  const extraJsonTags = Array.from(new Set([...defaultExtraJsonTags, ...(sgOptions.extraJsonTags || [])]));
   const schemGeneratorConfig: Config = {
     expose: sgOptions.expose != null ? sgOptions.expose : baseSchemaGeneratorConfig.expose,
     topRef: sgOptions.topRef != null ? sgOptions.topRef : baseSchemaGeneratorConfig.topRef,
@@ -39,6 +65,7 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
     sortProps: sgOptions.sortProps != null ? sgOptions.sortProps : baseSchemaGeneratorConfig.sortProps,
     strictTuples: sgOptions.strictTuples != null ? sgOptions.strictTuples : baseSchemaGeneratorConfig.strictTuples,
     skipTypeCheck: sgOptions.skipTypeCheck != null ? sgOptions.skipTypeCheck : baseSchemaGeneratorConfig.skipTypeCheck,
+    extraJsonTags: extraJsonTags,
     path: baseSchemaGeneratorConfig.path,
     type: baseSchemaGeneratorConfig.type,
   };
