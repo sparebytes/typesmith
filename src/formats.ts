@@ -1,6 +1,8 @@
 // See https://json-schema.org/understanding-json-schema/reference/string.html
 
-// Dates and times
+//
+// Date and Time
+//
 
 /**
  * Date and time together, for example, 2018-11-13T20:20:39+00:00
@@ -40,7 +42,24 @@ export type TimeString = string;
  */
 export type DateString = string;
 
-//Email addresses
+/**
+ * Year and month without a day.
+ * Valid:
+ * - 2001-01
+ * - 2001-12
+ * Invalid:
+ * - 2001
+ * - 2001-01-01
+ * - 2001-13
+ * - 2001-00
+ * - 2001-21
+ * @pattern ^\d{4}-(0[1-9]|1[0-2])$
+ */
+export type YearMonthString = string;
+
+//
+// Email addresses
+//
 
 /**
  * Internet email address, see RFC 5322, section 3.4.1
@@ -48,7 +67,9 @@ export type DateString = string;
  */
 export type EmailString = string;
 
+//
 // Hostnames
+//
 
 /**
  * Internet host name, see RFC 1034, section 3.1
@@ -56,7 +77,10 @@ export type EmailString = string;
  */
 export type HostnameString = string;
 
+
+//
 // IP Addresses
+//
 
 /**
  * IPv4 address, according to dotted-quad ABNF syntax as defined in RFC 2673, section 3.2
@@ -70,7 +94,29 @@ export type Ipv4String = string;
  */
 export type Ipv6String = string;
 
+
+//
+// People
+//
+
+/**
+ * @pattern ^\d{3}-\d{2}-\d{4}$
+ */
+export type SocialSecurityNumberString = string
+
+/**
+ * @pattern ^\d{9}$
+ */
+export type SocialSecurityNumberNonHyphenatedString = string
+
+/**
+ * @pattern ^\d{3}-?\d{2}-?\d{4}$
+ */
+export type SocialSecurityNumberOptionalHyphenatedString = string
+
+//
 // Unsupported
+//
 
 // id-hostname is not supported by ajv
 // /**
