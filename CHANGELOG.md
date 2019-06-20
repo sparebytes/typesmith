@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/sparebytes/typesmith/compare/v0.7.0...v0.8.0) (2019-06-20)
+
+
+### Features
+
+* add assertTypeAssign for validating and instantiating a new class ([f20cf77](https://github.com/sparebytes/typesmith/commit/f20cf77))
+
+
+### Tests
+
+* ensure transformer code isn't exported from "typesmith" ([632ecdd](https://github.com/sparebytes/typesmith/commit/632ecdd))
+
+
+
 ## [0.7.0](https://github.com/sparebytes/typesmith/compare/v0.6.0...v0.7.0) (2019-06-20)
 
 
