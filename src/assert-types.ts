@@ -45,7 +45,17 @@ export interface AssertTypeOptions {
   lazyCompile?: boolean;
 }
 
-export class AssertTypeSuccess<T> {
+export interface AssertTypeResult<T> {
+  readonly tag: "success" | "failure";
+  readonly isSuccess: boolean;
+  unwrap(): T;
+  map<U>(mapFn: (v: T) => U): AssertTypeResult<U>;
+  getErrors(): null | ErrorObject[];
+  getOrElse(orElseValue: T): T;
+  getOrElseL(orElseFn: (errors: ErrorObject[]) => T): T;
+}
+
+export class AssertTypeSuccess<T> implements AssertTypeResult<T> {
   readonly tag: "success" = "success";
   readonly isSuccess = true;
   constructor(private value: T) {}
@@ -66,17 +76,17 @@ export class AssertTypeSuccess<T> {
   }
 }
 
-export class AssertTypeFailure<T> {
+export class AssertTypeFailure<T> implements AssertTypeResult<T> {
   readonly tag: "failure" = "failure";
   readonly isSuccess = false;
   constructor(private errors: ErrorObject[]) {}
   unwrap(): never {
     throw new NestedError("Validation Error", this.errors as any);
   }
-  map<U>(mapFn: (v: T) => U): AssertTypeSuccess<U> {
-    return (this as unknown) as AssertTypeSuccess<U>;
+  map<U>(mapFn: (v: T) => U): AssertTypeFailure<U> {
+    return (this as unknown) as AssertTypeFailure<U>;
   }
-  getErrors() {
+  getErrors(): ErrorObject[] {
     return this.errors;
   }
   getOrElse(orElseValue: T): T {
@@ -87,6 +97,6 @@ export class AssertTypeFailure<T> {
   }
 }
 
-export type AssertTypeResult<T> = AssertTypeSuccess<T> | AssertTypeFailure<T>;
+// export type AssertTypeResult<T> = AssertTypeSuccess<T> | AssertTypeFailure<T>;
 
 export type AssertTypeFn<T> = (object: any) => AssertTypeResult<T>;

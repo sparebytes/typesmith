@@ -1,5 +1,5 @@
 import test from "ava";
-import { getValidatableFn, Validatable } from "../dist";
+import { getValidatableFn, Validatable, assertTypeAssign } from "../dist";
 
 @Validatable()
 class ThingyA {
@@ -19,15 +19,13 @@ class ThingyC extends ThingyB {
 const assertThingy = getValidatableFn(ThingyC)!;
 
 test("@Validatable JSON Valid", t => {
-  assertThingy({ foo: "bar" }).unwrap();
-  t.pass();
+  t.assert(assertThingy({ foo: "bar" }).unwrap().foo === "bar");
 });
 
 test("@Validatable Instance Valid", t => {
   const thingy = new ThingyC();
   thingy.foo = "bar";
-  assertThingy(thingy).unwrap();
-  t.pass();
+  t.assert(assertThingy(thingy).unwrap().foo === "bar");
 });
 
 test("@Validatable JSON Invalid", t => {
@@ -38,4 +36,12 @@ test("@Validatable Instance Invalid", t => {
   const thingy = new ThingyC();
   thingy.foo = "baz" as any;
   t.throws(() => assertThingy(thingy).unwrap());
+});
+
+test("assertTypeAssign", t => {
+  const thingy = assertTypeAssign(ThingyC, { foo: "bar" }).unwrap();
+  t.assert(thingy.foo === "bar");
+  t.assert(thingy instanceof ThingyC);
+
+  t.throws(() => assertTypeAssign(ThingyC, { foo: "baz" }).unwrap());
 });
