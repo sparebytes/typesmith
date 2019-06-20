@@ -1,8 +1,10 @@
 import * as path from "path";
+import { performance } from "perf_hooks";
 import { Config, Context, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
 import * as ts from "typescript";
 import { AssertTypeOptions } from "../assert-types";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
+import { TransformerPerformanceDebugger } from "./_transformer-performance-debugger";
 import NestedError = require("nested-error-stacks");
 
 const defaultExtraJsonTags = [
@@ -36,6 +38,7 @@ export type PartialVisitorContext = {
   checker: ts.TypeChecker;
   declarationPath: string;
   defaultValidationOptions: Partial<AssertTypeOptions>;
+  perfDebugger?: TransformerPerformanceDebugger | null;
 };
 
 const baseSchemaGeneratorConfig: Config = {
@@ -87,23 +90,29 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
     defaultValidationOptions: defaultValidationOptions,
   };
 
+  const oDebug = (options && options.options && options.options.debug) || {};
+  if (typeof oDebug.performance === "number") {
+    // console.log(`typesmith transformer performance debugging enabled every ${oDebug.performance}ms.`);
+    visitorContext.perfDebugger = new TransformerPerformanceDebugger(oDebug.performance);
+  }
+
   return visitorContext;
 }
 
-export default function transformer(
-  program: ts.Program,
-  options?: { [Key: string]: unknown },
-): ts.TransformerFactory<ts.SourceFile> {
+export default function transformer(program: ts.Program, options?: { [Key: string]: any }): ts.TransformerFactory<ts.SourceFile> {
   if (options && options.verbose) {
     console.log(
-      `typescript-is: transforming program with ${program.getSourceFiles().length} source files; using TypeScript ${ts.version}.`,
+      `typesmith: transforming program with ${program.getSourceFiles().length} source files; using TypeScript ${ts.version}.`,
     );
   }
 
   const visitorContext = getVisitorContext(program, options);
 
-  return (context: ts.TransformationContext) => (file: ts.SourceFile) =>
+  if (visitorContext.perfDebugger) visitorContext.perfDebugger.startEventPrinter();
+  const result = (context: ts.TransformationContext) => (file: ts.SourceFile) =>
     transformNodeAndChildren(file, program, context, visitorContext);
+  if (visitorContext.perfDebugger) visitorContext.perfDebugger.stopEventPrinter();
+  return result;
 }
 
 function transformNodeAndChildren(
@@ -151,6 +160,7 @@ function getSourceFileDir(sourceFile: ts.SourceFile): string {
 }
 
 export function transformNode(node: ts.Node, visitorContext: PartialVisitorContext): ts.Node {
+  let start = visitorContext.perfDebugger ? performance.now() : NaN;
   if (ts.isCallExpression(node)) {
     const signature = visitorContext.checker.getResolvedSignature(node);
     if (
@@ -163,24 +173,28 @@ export function transformNode(node: ts.Node, visitorContext: PartialVisitorConte
         const typeArgument = node.typeArguments[0];
         const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
 
-        return ts.updateCall(node, node.expression, node.typeArguments, [
+        const result = ts.updateCall(node, node.expression, node.typeArguments, [
           ...node.arguments,
           ts.createStringLiteral("\u2663"),
           jsonToLiteralExpression(visitorContext.defaultValidationOptions),
           jsonToLiteralExpression(typeNodeJsonSchema),
         ]);
+        if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("assertTypeFn", performance.now() - start);
+        return result;
       } else if (name == "Validatable") {
         const decorator = node.parent;
         if (ts.isDecorator(decorator)) {
           const classDeclaration = decorator.parent;
           if (ts.isClassDeclaration(classDeclaration)) {
             const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, classDeclaration);
-            return ts.updateCall(node, node.expression, node.typeArguments, [
+            const result = ts.updateCall(node, node.expression, node.typeArguments, [
               ...node.arguments,
               ts.createStringLiteral("\u2663"),
               jsonToLiteralExpression(visitorContext.defaultValidationOptions),
               jsonToLiteralExpression(typeNodeJsonSchema),
             ]);
+            if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("@Validatable", performance.now() - start);
+            return result;
           }
         }
 
@@ -198,6 +212,7 @@ export function transformNode(node: ts.Node, visitorContext: PartialVisitorConte
       // const arrowFunction = createValidationArrowFunction(typeNodeJsonSchema);
     }
   }
+  if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("miss", performance.now() - start);
   return node;
 }
 
