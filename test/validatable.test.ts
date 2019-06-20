@@ -54,3 +54,8 @@ test("assertTypeAssign(clazz)", t => {
 
   t.throws(() => thingyAssertAssign({ foo: "baz" }).unwrap());
 });
+
+test("assertTypeAssign(clazz, data) Disallow Inheritance", t => {
+  class ThingyD extends ThingyC {}
+  t.throws(() => assertTypeAssign(ThingyD, { foo: "baz" }), "allowInherited is false but the validator appears to be inherited");
+});
