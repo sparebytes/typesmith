@@ -49,27 +49,23 @@ interface Person {
 
 const assertPerson = assertTypeFn<Person>();
 
-// Valid Object
-const person = { firstName: "Jill", lastName: "Smith", dateOfBirth: "1990-12-31" };
-assertPerson(person).unwrap();
-//# { firstName: "Jill", lastName: "Smith", dateOfBirth: "1990-12-31" }
-assertPerson(person).getErrors();
-//# null
-assertPerson(person).getOrElse("else");
-//# { firstName: "Jill", lastName: "Smith", dateOfBirth: "1990-12-31" }
-assertPerson(person).getOrElseL(errors => "else");
-//# { firstName: "Jill", lastName: "Smith", dateOfBirth: "1990-12-31" }
-
-// Invalid Object
+const jillSmith = { firstName: "Jill", lastName: "Smith", dateOfBirth: "1990-12-31" };
+const janeDoe = { firstName: "Jane", lastName: "Doe", dateOfBirth: "1990-12-31" };
 const invalidPerson = {};
-assertPerson(invalidPerson).unwrap();
-// throws error
-assertPerson(invalidPerson).getErrors();
-// [...]
-assertPerson(invalidPerson).getOrElse("else");
-// "else"
-assertPerson(invalidPerson).getOrElseL(errors => "else");
-// "else"
+
+// Validation Successful Result
+assertPerson(jillSmith).isSuccess === true;
+assertPerson(jillSmith).unwrap() === jillSmith;
+assertPerson(jillSmith).getErrors() === null;
+assertPerson(jillSmith).getOrElse(janeDoe) === jillSmith;
+assertPerson(jillSmith).getOrElseL(errors => janeDoe) === jillSmith;
+
+// Validation Failure Result
+assertPerson(invalidPerson).isSuccess === false;
+assertPerson(invalidPerson).unwrap(); // Throws Error
+assertPerson(invalidPerson).getErrors().length > 0;
+assertPerson(invalidPerson).getOrElse(janeDoe) === janeDoe;
+assertPerson(invalidPerson).getOrElseL(errors => janeDoe) === janeDoe;
 ```
 
 ## 💣 Caveats
