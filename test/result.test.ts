@@ -7,7 +7,7 @@ interface Person {
   dateOfBirth: DateString;
 }
 
-const assertPerson = assertTypeFn<Person>();
+const assertPerson = assertTypeFn<Person>({ allErrors: true });
 
 const jillSmith = { firstName: "Jill", lastName: "Smith", dateOfBirth: "1990-12-31" };
 const janeDoe = { firstName: "Jane", lastName: "Doe", dateOfBirth: "1990-12-31" };
@@ -24,7 +24,7 @@ test("Validation Successful Result", t => {
 test("Validation Failure Result", t => {
   t.assert(assertPerson(invalidPerson).isSuccess === false);
   t.throws(() => assertPerson(invalidPerson).unwrap());
-  t.assert(assertPerson(invalidPerson).getErrors()!.length > 0);
+  t.assert(assertPerson(invalidPerson).getErrors()!.length === 3);
   t.assert(assertPerson(invalidPerson).getOrElse(janeDoe) === janeDoe);
   t.assert(assertPerson(invalidPerson).getOrElseL(errors => janeDoe) === janeDoe);
 });
