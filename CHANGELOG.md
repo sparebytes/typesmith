@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/sparebytes/typesmith/compare/v0.6.0...v0.7.0) (2019-06-20)
+
+
+### Features
+
+* ability to override validation settings at the type-level ([1821982](https://github.com/sparebytes/typesmith/commit/1821982))
+* add global settings configurable at runtime ([acde2ba](https://github.com/sparebytes/typesmith/commit/acde2ba))
+
+
+### Tests
+
+* add test for AssertTypeResult ([f1cfac4](https://github.com/sparebytes/typesmith/commit/f1cfac4))
+* write buffer test ([e60de89](https://github.com/sparebytes/typesmith/commit/e60de89))
+
+
+
 ## [0.6.0](https://github.com/sparebytes/typesmith/compare/v0.5.0...v0.6.0) (2019-06-20)
 
 
