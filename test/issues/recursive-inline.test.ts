@@ -2,8 +2,8 @@ import test from "ava";
 import { assertTypeFn } from "../../dist";
 import { BTree } from "../example-types/b-tree";
 
-// A runtime error is thrown during validation because the generated JSON Schema is invalid.
-// This happend when `BTree<number>` is inlined.
+// A runtime error is thrown when AJV compiles the validation because the generated JSON Schema is invalid.
+// This happens when `BTree<number>` is inlined like so:
 export const assertNumberTree = assertTypeFn<BTree<number>>();
 
 test("Recursive Type Inline", t => {
