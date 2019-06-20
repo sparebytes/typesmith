@@ -70,11 +70,11 @@ assertPerson(invalidPerson).getOrElseL(errors => janeDoe) === janeDoe;
 
 ## 🎛 Options
 
-- **allErrors**: (default: true) returns all errors instead of returning only the first one
-- **removeAdditional**: (default: false) remove additional properties
-- **useDefaults**: (default: false) replace missing or undefined properties and items with the values from corresponding default keywords
-- **coerceTypes**: (default: false) change data type of data to match type keyword
-- **lazyCompile**: (default: true) wait to compile validation function until first use
+- **allErrors**: *(default: true)* returns all errors instead of returning only the first one
+- **removeAdditional**: *(default: false)* remove additional properties
+- **useDefaults**: *(default: false)* replace missing or undefined properties and items with the values from corresponding default keywords
+- **coerceTypes**: *(default: false)* change data type of data to match type keyword
+- **lazyCompile**: *(default: true)* wait to compile validation function until first use
 
 
 Options are specifiable at the global and type level, EG:
