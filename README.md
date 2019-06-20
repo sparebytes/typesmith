@@ -112,11 +112,22 @@ assertTypeFn<{ name: string }>({ coerceTypes: true });
 ### AJV's type coercion ineffective for primitives
 
 With AJV's `coerceTypes` enabled, coerced primitives will validate but will return the original value. EG:
-```
+```ts
 // Coercion of boxed value works
 assertTypeFn<number>({value: "12"}).unwrap().value === 12;
 // Coercion of primitive doesn't
 assertTypeFn<number>("12").unwrap() === "12"
+```
+
+### @Validate() w/ Generic Type Parameters
+
+Defaults must be provided to classes with generic type paramters. EG:
+```ts
+// Okay
+@Validate() class Foo<A = any> {}
+
+// Crashes
+@Validate() class Foo<A> {}
 ```
 
 ### Dates

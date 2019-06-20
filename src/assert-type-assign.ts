@@ -6,6 +6,8 @@ import { getValidatableFn } from "./validatable-util";
  * 
  * `clazz` must have the `@Validatable()` decorator
  * 
+ * **Does not instatiate new classes inside of `clazz`'s properties**
+ * 
  * @example
  *  @Validatable()
  *  class Thing { foo: string }

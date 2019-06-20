@@ -2,17 +2,17 @@ import test from "ava";
 import { getValidatableFn, Validatable, assertTypeAssign } from "../dist";
 
 @Validatable()
-class ThingyA {
-  a?: "A";
+class ThingyA<A = any> {
+  a?: A;
 }
 
 @Validatable()
-class ThingyB extends ThingyA {
-  b?: "B";
+class ThingyB<A = any, B = any> extends ThingyA<A> {
+  b?: B;
 }
 
 @Validatable()
-class ThingyC extends ThingyB {
+class ThingyC extends ThingyB<"a", "b"> {
   foo!: "bar";
 }
 
