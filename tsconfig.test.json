@@ -18,5 +18,6 @@
       }
     ]
   },
-  "include": ["test/**/*.ts"]
+  "include": ["test/**/*.ts"],
+  "exclude": ["test/issues/*.ts"]
 }
