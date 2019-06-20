@@ -34,6 +34,7 @@
     "test:complete": "yarn build && yarn test",
     "dev": "concurrently -c \"bgYellow,green\" -n \"bld,tst\" \"yarn run build:watch\" \"yarn run test:watch\"",
     "release": "yarn build:release && yarn test && git push --follow-tags origin master && cd dist && npm publish",
+    "prepublishOnly": "node do-not-run-publish-here___publish-the-dist-folder-instead",
     "standard-version": "standard-version"
   },
   "dependencies": {
