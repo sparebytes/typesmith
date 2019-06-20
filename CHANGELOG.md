@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/sparebytes/typesmith/compare/v0.5.0...v0.6.0) (2019-06-20)
+
+
+### Features
+
+* **format:** add DateInstance and DateTimeFlex formats ([f2feef1](https://github.com/sparebytes/typesmith/commit/f2feef1))
+
+
+### Tests
+
+* add inheritance to @Validatable class decorator test ([c0f8f6c](https://github.com/sparebytes/typesmith/commit/c0f8f6c))
+
+
+
 ## [0.5.0](https://github.com/sparebytes/typesmith/compare/v0.4.0...v0.5.0) (2019-06-19)
 
 
