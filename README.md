@@ -6,6 +6,8 @@ Transforms typescript interfaces, classes and other types into runtime validatio
 
 - [ts-json-schema-generator](https://www.npmjs.com/package/ts-json-schema-generator) - Generate JSON Schema from Typescript AST
 - [ajv](https://www.npmjs.com/package/ajv) - Validates an object against JSON Schema
+- [ajv-keywords](ajv-keywords) - Additional validation capabilities via custom JSON Schema keywords
+
 
 ## 💿 Quick Start Guide
 
@@ -39,6 +41,7 @@ Transforms typescript interfaces, classes and other types into runtime validatio
 import { assertTypeFn, DateString } from "typesmith";
 
 interface Person {
+  /** @minLength 1 */
   firstName: string;
   lastName: string;
   dateOfBirth: DateString;
@@ -65,6 +68,28 @@ assertPerson(invalidPerson).getOrElse(janeDoe) === janeDoe;
 assertPerson(invalidPerson).getOrElseL(errors => janeDoe) === janeDoe;
 ```
 
+## 🎛 Options
+
+- **allErrors**: (default: true) returns all errors instead of returning only the first one
+- **removeAdditional**: (default: false) remove additional properties
+- **useDefaults**: (default: false) replace missing or undefined properties and items with the values from corresponding default keywords
+- **coerceTypes**: (default: false) change data type of data to match type keyword
+- **lazyCompile**: (default: true) wait to compile validation function until first use
+
+
+Options are specifiable at the global and type level, EG:
+```ts
+import { assertTypeFn, settings, Validatable } from "typesmith";
+
+// Globally:
+settings.updateGlobalValidationOptions({ removeAdditional: true });
+
+// Type-Level
+assertTypeFn<{ name: string }>({ coerceTypes: true });
+@Validatable({ coerceTypes: true }) class Foo {}
+```
+
+
 ## 💣 Caveats
 
 - Recursive generic types cannot be inlined. EG, use `type NumberBTree = BTree<number>; assertTypeFn<NumberBTree>();` instead of `assertTypeFn<BTree<number>>();`
@@ -73,8 +98,6 @@ assertPerson(invalidPerson).getOrElseL(errors => janeDoe) === janeDoe;
 
 ## ✔ Todo
 
-- feat: allow validation options to be overridden
 - feat: allow strings to be coerced to other primitives without using AJV's built-in coercion since it is too lenient. EG, `false` shouldn't be coerced to `0`
-- feat: validation of date objects
-  - Use [ajv-keywords](ajv-keywords) to accomplish this. `ts-json-schema-generator` may need to be modified to emit the appropriate keyword.
-- Use [ajv-pack](https://www.npmjs.com/package/ajv-pack) for precompiled validation functions. ajv-pack has restrictions so this would need to be optional.
+- docs: validation of date objects and strings
+- feat: use [ajv-pack](https://www.npmjs.com/package/ajv-pack) for precompiled validation functions. ajv-pack has restrictions so this would need to be optional.

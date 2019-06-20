@@ -31,6 +31,7 @@
     "test:run:watch": "ava --watch",
     "test:watch": "concurrently -c \"yellow,blue\" -n \"tb,tr\" \"yarn run test:build:watch\" \"yarn run test:run:watch\"",
     "test": "yarn run test:clean && yarn run test:build && yarn run test:run",
+    "test:complete": "yarn build && yarn test",
     "dev": "concurrently -c \"bgYellow,green\" -n \"bld,tst\" \"yarn run build:watch\" \"yarn run test:watch\"",
     "release": "yarn build:release && yarn test && git push --follow-tags origin master && cd dist && npm publish",
     "standard-version": "standard-version"

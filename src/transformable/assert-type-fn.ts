@@ -2,11 +2,18 @@ import { assertTypeFnFactory, AssertTypeOptions, AssertTypeResult } from "../ass
 
 export function assertTypeFn<T>(assertTypeOptions?: AssertTypeOptions): (object: any) => AssertTypeResult<T>;
 export function assertTypeFn<T>(...args: any[]): (object: any) => AssertTypeResult<T> {
-  const n2 = args[args.length - 3];
-  const n1 = args[args.length - 2];
-  const n0 = args[args.length - 1];
-  if (n2 !== "\u2663") {
+  const clover = args[args.length - 3];
+  let options = args[args.length - 2];
+  const jsonSchema = args[args.length - 1];
+  if (clover !== "\u2663") {
     throw new Error("assertTypeFn(): Requires transformation via ttsc or ttypescript.");
   }
-  return assertTypeFnFactory(n1, n0);
+  if (args.length > 3) {
+    const overrides = args[0];
+    options = {
+      ...options,
+      ...overrides,
+    };
+  }
+  return assertTypeFnFactory(options, jsonSchema);
 }

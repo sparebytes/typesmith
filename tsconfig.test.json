@@ -9,14 +9,7 @@
     "strict": true,
     "sourceMap": false,
     "declaration": false,
-    "plugins": [
-      {
-        "transform": "./dist/transformer/index.js",
-        "options": {
-          "coerceTypes": false
-        }
-      }
-    ]
+    "plugins": [{ "transform": "./dist/transformer/index.js" }]
   },
   "include": ["test/**/*.ts"],
   "exclude": ["test/issues/*.ts"]
