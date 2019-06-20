@@ -1,6 +1,6 @@
 import * as path from "path";
 import { performance } from "perf_hooks";
-import { Config, Context, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
+import { Config, Context, createFormatter, createParser, SchemaGenerator, StringMap, Definition } from "ts-json-schema-generator";
 import * as ts from "typescript";
 import { AssertTypeOptions } from "../assert-types";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
@@ -217,12 +217,15 @@ export function transformNode(node: ts.Node, visitorContext: PartialVisitorConte
 }
 
 export function createJsonSchemaOfNode(schemaGenerator: SchemaGenerator, rootNode: ts.Node) {
-  const rootType = (schemaGenerator as any).nodeParser.createType(rootNode, new Context());
-  return {
-    $schema: "http://json-schema.org/draft-07/schema#",
-    definitions: (schemaGenerator as any).getRootChildDefinitions(rootType),
-    ...(schemaGenerator as any).getRootTypeDefinition(rootType),
-  };
+  const sg: any = schemaGenerator;
+  const rootNodes = [rootNode];
+  const rootTypes = rootNodes.map(rootNode => {
+      return sg.nodeParser.createType(rootNode, new Context());
+  });
+  const rootTypeDefinition = rootTypes.length === 1 ? sg.getRootTypeDefinition(rootTypes[0]) : {};
+  const definitions: StringMap<Definition> = {};
+  rootTypes.forEach(rootType => sg.appendRootChildDefinitions(rootType, definitions));
+  return { $schema: "http://json-schema.org/draft-07/schema#", ...rootTypeDefinition, definitions };
 }
 
 // export function createValidationArrowFunction(jsonSchema: any) {
