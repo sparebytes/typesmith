@@ -37,7 +37,7 @@ export type PartialVisitorContext = {
   schemaGenerator: SchemaGenerator;
   checker: ts.TypeChecker;
   declarationPath: string;
-  defaultValidationOptions: Partial<AssertTypeOptions>;
+  defaultValidationOptions: AssertTypeOptions;
   perfDebugger?: TransformerPerformanceDebugger | null;
 };
 
@@ -75,8 +75,8 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
       ? options.options.declarationPath
       : path.resolve(path.join(__dirname, "..", "transformable"));
 
-  const vOptions = ((options && options.options) || {}) as Partial<AssertTypeOptions>;
-  const defaultValidationOptions: Partial<AssertTypeOptions> = {};
+  const vOptions = ((options && options.options) || {}) as AssertTypeOptions;
+  const defaultValidationOptions: AssertTypeOptions = {};
   if ("removeAdditional" in vOptions) defaultValidationOptions.removeAdditional = vOptions.removeAdditional;
   if ("useDefaults" in vOptions) defaultValidationOptions.useDefaults = vOptions.useDefaults;
   if ("coerceTypes" in vOptions) defaultValidationOptions.coerceTypes = vOptions.coerceTypes;

@@ -1,6 +1,6 @@
 import { assertTypeFnFactory, AssertTypeOptions, AssertTypeResult } from "../assert-types";
 
-export function assertTypeFn<T>(assertTypeOptions?: Partial<AssertTypeOptions>): (object: any) => AssertTypeResult<T>;
+export function assertTypeFn<T>(assertTypeOptions?: AssertTypeOptions): (object: any) => AssertTypeResult<T>;
 export function assertTypeFn<T>(...args: any[]): (object: any) => AssertTypeResult<T> {
   const n2 = args[args.length - 3];
   const n1 = args[args.length - 2];

@@ -2,8 +2,14 @@ import * as Ajv from "ajv";
 import { ErrorObject } from "./ajv-errors";
 import NestedError = require("nested-error-stacks");
 import ajv = require("ajv");
+import { settings } from "./settings";
 
 export interface AssertTypeOptions {
+  /**
+   * check all rules collecting all errors.
+   */
+  allErrors?: boolean;
+
   /**
    * remove additional properties - see example in Filtering data. This option is not used if schema is added with addMetaSchema method.
    * Option values:
@@ -12,7 +18,7 @@ export interface AssertTypeOptions {
    * - true - only additional properties with additionalProperties keyword equal to false are removed.
    * - "failing" - additional properties that fail schema validation will be removed (where additionalProperties keyword is false or schema).
    */
-  removeAdditional: boolean | "all" | "failing";
+  removeAdditional?: boolean | "all" | "failing";
 
   /**
    * replace missing or undefined properties and items with the values from corresponding default keywords. Default behaviour is to ignore default keywords. This option is not used if schema is added with addMetaSchema method. See examples in Assigning defaults.
@@ -22,7 +28,7 @@ export interface AssertTypeOptions {
    * - "empty" - in addition to missing or undefined, use defaults for properties and items that are equal to null or "" (an empty string).
    * - "shared" (deprecated) - insert defaults by reference. If the default is an object, it will be shared by all instances of validated data. If you modify the inserted default in the validated data, it will be modified in the schema as well.
    */
-  useDefaults: boolean | "empty" | "shared";
+  useDefaults?: boolean | "empty" | "shared";
 
   /**
    * change data type of data to match type keyword. See the example in Coercing data types and coercion rules.
@@ -31,7 +37,7 @@ export interface AssertTypeOptions {
    * - true - coerce scalar data types.
    * - "array" - in addition to coercions between scalar types, coerce scalar data to an array with one element and vice versa (as required by the schema).
    */
-  coerceTypes: boolean | "array";
+  coerceTypes?: boolean | "array";
 
   /**
    * should the validation function be compiled lazily
@@ -39,7 +45,7 @@ export interface AssertTypeOptions {
    * - false - compile the validation function ASAP
    * - true (default) - compile the validation function the first time it is used
    */
-  lazyCompile: boolean;
+  lazyCompile?: boolean;
 }
 
 export class AssertTypeSuccess<T> {
@@ -88,8 +94,11 @@ export type AssertTypeResult<T> = AssertTypeSuccess<T> | AssertTypeFailure<T>;
 
 export type AssertTypeFn<T> = (object: any) => AssertTypeResult<T>;
 
-export function assertTypeFnFactory<T>(options: Partial<AssertTypeOptions>, jsonSchema: any): AssertTypeFn<T> {
-  const ajv = new Ajv(options as any);
+export function assertTypeFnFactory<T>(options: AssertTypeOptions, jsonSchema: any): AssertTypeFn<T> {
+  const ajv = new Ajv({
+    ...settings.useGlobalValidationOptions(),
+    ...options,
+  } as Ajv.Options);
   let typeValidateFn: ajv.ValidateFunction;
 
   if (options.lazyCompile === false) {
