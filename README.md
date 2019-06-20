@@ -68,7 +68,7 @@ assertPerson(invalidPerson).getOrElse(janeDoe) === janeDoe;
 assertPerson(invalidPerson).getOrElseL(errors => janeDoe) === janeDoe;
 ```
 
-## 🎛 Options
+## 🎛️ Options
 
 - **allErrors**: *(default: true)* returns all errors instead of returning only the first one
 - **removeAdditional**: *(default: false)* remove additional properties
@@ -92,12 +92,42 @@ assertTypeFn<{ name: string }>({ coerceTypes: true });
 
 ## 💣 Caveats
 
-- Recursive generic types cannot be inlined. EG, use `type NumberBTree = BTree<number>; assertTypeFn<NumberBTree>();` instead of `assertTypeFn<BTree<number>>();`
-- With AJV's `coerceTypes` enabled, coerced primitives will validate but will return the original value. EG `assertTypeFn<number>("12").unwrap() === "12"` but `assertTypeFn<number>({value: "12"}).unwrap().value === 12`.
-- Date objects cannot be properly validated and strings cannot be coerced to the Date type
+### Compiler crashes in rare but specific circumstances:
+- Mixin classes:
+  ```ts
+  // Crashes
+  @Validatable()
+  export class PersonSearchRequest extends SearchRequestOf(PersonFilters) {}
+  ```
+- Anonymous recursive generic types:
+  ```ts
+  // Okay
+  type NumberBTree = BTree<number>;
+  assertTypeFn<NumberBTree>();
+  
+  // Crashes
+  assertTypeFn<BTree<number>>();
+  ```
+
+### AJV's type coercion ineffective for primitives
+
+With AJV's `coerceTypes` enabled, coerced primitives will validate but will return the original value. EG:
+```
+// Coercion of boxed value works
+assertTypeFn<number>({value: "12"}).unwrap().value === 12;
+// Coercion of primitive doesn't
+assertTypeFn<number>("12").unwrap() === "12"
+```
+
+### Dates
+
+*TODO*
+
+*note: try using `{ DateInstance, DateTimeFlex, DateTimeString } from "typesmith"`*
 
 ## ✔ Todo
 
+### Features
+
 - feat: allow strings to be coerced to other primitives without using AJV's built-in coercion since it is too lenient. EG, `false` shouldn't be coerced to `0`
-- docs: validation of date objects and strings
 - feat: use [ajv-pack](https://www.npmjs.com/package/ajv-pack) for precompiled validation functions. ajv-pack has restrictions so this would need to be optional.
