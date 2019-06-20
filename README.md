@@ -26,10 +26,7 @@ Transforms typescript interfaces, classes and other types into runtime validatio
    ```json
    {
      "compilerOptions": {
-       "transform": "typesmith/transformer",
-       "options": {
-         "coerceTypes": false
-       }
+       "plugins": [{ "transform": "./dist/transformer/index.js" }]
      }
    }
    ```
