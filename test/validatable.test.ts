@@ -38,10 +38,19 @@ test("@Validatable Instance Invalid", t => {
   t.throws(() => assertThingy(thingy).unwrap());
 });
 
-test("assertTypeAssign", t => {
+test("assertTypeAssign(clazz, data)", t => {
   const thingy = assertTypeAssign(ThingyC, { foo: "bar" }).unwrap();
   t.assert(thingy.foo === "bar");
   t.assert(thingy instanceof ThingyC);
 
   t.throws(() => assertTypeAssign(ThingyC, { foo: "baz" }).unwrap());
+});
+
+test("assertTypeAssign(clazz)", t => {
+  const thingyAssertAssign = assertTypeAssign(ThingyC);
+  const thingy = thingyAssertAssign({ foo: "bar" }).unwrap();
+  t.assert(thingy.foo === "bar");
+  t.assert(thingy instanceof ThingyC);
+
+  t.throws(() => thingyAssertAssign({ foo: "baz" }).unwrap());
 });
