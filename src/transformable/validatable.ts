@@ -1,7 +1,6 @@
-import { assertTypeFnFactory } from "../assert-types";
+import { assertTypeFnFactory } from "../assert-type-fn-factory";
 import { setValidatableFn } from "../validatable-util";
 
-// TODO: Handle audit.createdByUserID and audit.updatedByUserID
 export function Validatable(...args: any[]) {
   const clover = args[args.length - 3];
   let options = args[args.length - 2];

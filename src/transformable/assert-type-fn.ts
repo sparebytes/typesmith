@@ -1,4 +1,5 @@
-import { assertTypeFnFactory, AssertTypeOptions, AssertTypeResult } from "../assert-types";
+import { assertTypeFnFactory } from "../assert-type-fn-factory";
+import { AssertTypeOptions, AssertTypeResult } from "../assert-types";
 
 export function assertTypeFn<T>(assertTypeOptions?: AssertTypeOptions): (object: any) => AssertTypeResult<T>;
 export function assertTypeFn<T>(...args: any[]): (object: any) => AssertTypeResult<T> {

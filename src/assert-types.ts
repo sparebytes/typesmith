@@ -1,8 +1,5 @@
-import * as Ajv from "ajv";
 import { ErrorObject } from "./ajv-errors";
 import NestedError = require("nested-error-stacks");
-import ajv = require("ajv");
-import { settings } from "./settings";
 
 export interface AssertTypeOptions {
   /**
@@ -93,26 +90,3 @@ export class AssertTypeFailure<T> {
 export type AssertTypeResult<T> = AssertTypeSuccess<T> | AssertTypeFailure<T>;
 
 export type AssertTypeFn<T> = (object: any) => AssertTypeResult<T>;
-
-export function assertTypeFnFactory<T>(options: AssertTypeOptions, jsonSchema: any): AssertTypeFn<T> {
-  const ajv = new Ajv({
-    ...settings.useGlobalValidationOptions(),
-    ...options,
-  } as Ajv.Options);
-  let typeValidateFn: ajv.ValidateFunction;
-
-  if (options.lazyCompile === false) {
-    typeValidateFn = ajv.compile(jsonSchema);
-  } else {
-    typeValidateFn = (...args: any[]) => {
-      typeValidateFn = ajv.compile(jsonSchema);
-      return typeValidateFn.apply(null, args as any);
-    };
-    typeValidateFn.schema = jsonSchema;
-  }
-
-  return object => {
-    const isValid = typeValidateFn(object);
-    return isValid ? new AssertTypeSuccess<T>(object) : new AssertTypeFailure<T>(typeValidateFn.errors as Ajv.ErrorObject[]);
-  };
-}
