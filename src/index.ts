@@ -5,4 +5,5 @@ export * from "./assert-type-fn-factory";
 export * from "./assert-types";
 export * from "./formats";
 export * from "./settings";
+export * from "./typesmith-errors";
 export * from "./validatable-util";

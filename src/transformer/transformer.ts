@@ -5,7 +5,7 @@ import * as ts from "typescript";
 import { AssertTypeOptions } from "../assert-types";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
 import { TransformerPerformanceDebugger } from "./_transformer-performance-debugger";
-import NestedError = require("nested-error-stacks");
+import { TypesmithCompilationError } from "../typesmith-errors";
 
 const defaultExtraJsonTags = [
   "typeof",
@@ -109,10 +109,13 @@ export default function transformer(program: ts.Program, options?: { [Key: strin
   const visitorContext = getVisitorContext(program, options);
 
   if (visitorContext.perfDebugger) visitorContext.perfDebugger.startEventPrinter();
-  const result = (context: ts.TransformationContext) => (file: ts.SourceFile) =>
-    transformNodeAndChildren(file, program, context, visitorContext);
-  if (visitorContext.perfDebugger) visitorContext.perfDebugger.stopEventPrinter();
-  return result;
+  try {
+    const result = (context: ts.TransformationContext) => (file: ts.SourceFile) =>
+      transformNodeAndChildren(file, program, context, visitorContext);
+    return result;
+  } finally {
+    if (visitorContext.perfDebugger) visitorContext.perfDebugger.stopEventPrinter();
+  }
 }
 
 function transformNodeAndChildren(
@@ -139,7 +142,10 @@ function transformNodeAndChildren(
   } catch (error) {
     const sourceFile = node.getSourceFile();
     const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.pos);
-    throw new NestedError(`Failed to transform node at: ${sourceFile.fileName}:${line + 1}:${character + 1}`, error);
+    throw new TypesmithCompilationError(
+      `Failed to transform node at: ${sourceFile.fileName}:${line + 1}:${character + 1}`,
+      error,
+    );
   }
   return ts.visitEachChild(
     transformedNode,
@@ -220,7 +226,7 @@ export function createJsonSchemaOfNode(schemaGenerator: SchemaGenerator, rootNod
   const sg: any = schemaGenerator;
   const rootNodes = [rootNode];
   const rootTypes = rootNodes.map(rootNode => {
-      return sg.nodeParser.createType(rootNode, new Context());
+    return sg.nodeParser.createType(rootNode, new Context());
   });
   const rootTypeDefinition = rootTypes.length === 1 ? sg.getRootTypeDefinition(rootTypes[0]) : {};
   const definitions: StringMap<Definition> = {};

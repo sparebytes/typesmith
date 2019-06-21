@@ -1,5 +1,5 @@
 import { ErrorObject } from "./ajv-errors";
-import NestedError = require("nested-error-stacks");
+import { TypesmithValidationError } from "./typesmith-errors";
 
 export interface AssertTypeOptions {
   /**
@@ -81,7 +81,7 @@ export class AssertTypeFailure<T> implements AssertTypeResult<T> {
   readonly isSuccess = false;
   constructor(private errors: ErrorObject[]) {}
   unwrap(): never {
-    throw new NestedError("Validation Error", this.errors as any);
+    throw new TypesmithValidationError("Validation Error", this.errors as any);
   }
   map<U>(mapFn: (v: T) => U): AssertTypeFailure<U> {
     return (this as unknown) as AssertTypeFailure<U>;
