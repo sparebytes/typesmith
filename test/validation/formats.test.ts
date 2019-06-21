@@ -15,7 +15,7 @@ import {
   SocialSecurityNumberString,
   TimeString,
   YearMonthString,
-} from "../dist";
+} from "../../dist";
 
 export interface Foo {
   misc?: null | "" | YearMonthString | SocialSecurityNumberString;

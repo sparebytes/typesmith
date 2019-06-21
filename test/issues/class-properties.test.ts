@@ -6,7 +6,7 @@ export class DataBox {
 }
 export const assertDataBox = assertTypeFn<DataBox>();
 
-test("Class Constructor Properties ", t => {
+test("ISSUE: Class Constructor Properties ", t => {
   t.throws(() => assertDataBox({}).unwrap());
   t.assert(assertDataBox({ data: "abc" }).unwrap().data === "abc");
 });

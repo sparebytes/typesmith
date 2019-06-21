@@ -1,4 +1,4 @@
 export default {
-  files: ["test/**/*.test.js", "!test/issues/**/*"],
-  verbose: true,
+  files: ["test/**/*.test.js"],
+  verbose: false,
 };

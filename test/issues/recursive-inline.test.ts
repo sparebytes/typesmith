@@ -6,7 +6,7 @@ import { BTree } from "../example-types/b-tree";
 // This happens when `BTree<number>` is inlined like so:
 export const assertNumberTree = assertTypeFn<BTree<number>>();
 
-test("Recursive Type Inline", t => {
+test("ISSUE: Recursive Type Inline", t => {
   const value = {
     value: "5",
     left: {

@@ -10,7 +10,7 @@ export class DataBox {
  */
 export const assertDataBox = assertTypeFn<DataBox>();
 
-test("Buffer", t => {
+test("ISSUE: Buffer", t => {
   t.assert(assertDataBox({ data: null }).unwrap().data === null);
   t.assert(assertDataBox({ data: "a" }).unwrap().data === "a");
   t.assert(

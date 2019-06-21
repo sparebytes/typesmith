@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../dist";
+import { assertTypeFn } from "../../dist";
 
 export interface Foo {
   /** @minLength 5 */

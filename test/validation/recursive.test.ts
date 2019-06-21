@@ -1,6 +1,6 @@
 import test from "ava";
-import { assertTypeFn } from "../dist";
-import { BTree } from "./example-types/b-tree";
+import { assertTypeFn } from "../../dist";
+import { BTree } from "../example-types/b-tree";
 
 export type NumberTree = BTree<number>;
 export const assertNumberTree = assertTypeFn<NumberTree>();

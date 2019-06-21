@@ -1,7 +1,7 @@
 import test from "ava";
 import { performance } from "perf_hooks";
-import { assertTypeFn } from "../dist";
-import { BTree } from "./example-types/b-tree";
+import { assertTypeFn } from "../../dist";
+import { BTree } from "../example-types/b-tree";
 
 test.serial("Speed", t => {
   type NumberTree = BTree<number>;

@@ -11,6 +11,5 @@
     "declaration": false,
     "plugins": [{ "transform": "./dist/transformer/index.js" }]
   },
-  "include": ["test/**/*.ts"],
-  "exclude": ["test/issues/*.ts"]
+  "include": ["test/**/*.test.ts"]
 }
