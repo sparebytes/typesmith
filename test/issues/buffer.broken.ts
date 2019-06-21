@@ -16,7 +16,7 @@ test("ISSUE: Buffer", t => {
   t.assert(
     assertDataBox({ data: Buffer.from("b") })
       .unwrap()
-      .data.toString() === "b",
+      .data!.toString() === "b",
   );
   t.throws(() => assertDataBox({ data: 1 }).unwrap());
   t.throws(() => assertDataBox({ data: {} }).unwrap());
