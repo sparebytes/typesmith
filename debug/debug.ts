@@ -28,7 +28,7 @@ if (inSourceFile == null) {
   throw new Error(`inSourceFile is null. Is "${inFile}" a valid path?`);
 }
 
-const visitorContext = getVisitorContext(program);
+const visitorContext = getVisitorContext(program, { options: { continueOnError: true } });
 // const visitorContext = getVisitorContext(program, {
 //   declarationPath: path.resolve(__dirname, "../src/transformable"),
 // });

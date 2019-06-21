@@ -39,6 +39,7 @@ export type PartialVisitorContext = {
   declarationPath: string;
   defaultValidationOptions: AssertTypeOptions;
   perfDebugger?: TransformerPerformanceDebugger | null;
+  continueOnError: boolean;
 };
 
 const baseSchemaGeneratorConfig: Config = {
@@ -88,6 +89,7 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
     schemaGenerator: schemaGenerator,
     declarationPath: declarationPath,
     defaultValidationOptions: defaultValidationOptions,
+    continueOnError: (options && options.options && options.options.continueOnError) || false,
   };
 
   const oDebug = (options && options.options && options.options.debug) || {};
@@ -118,6 +120,12 @@ export default function transformer(program: ts.Program, options?: { [Key: strin
   }
 }
 
+function friendlyErrorMessageAtNode(node: ts.Node): string {
+  const sourceFile = node.getSourceFile();
+  const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.pos);
+  return `Failed to transform node at: ${sourceFile.fileName}:${line + 1}:${character + 1}`;
+}
+
 function transformNodeAndChildren(
   node: ts.SourceFile,
   program: ts.Program,
@@ -140,12 +148,7 @@ function transformNodeAndChildren(
   try {
     transformedNode = transformNode(node, visitorContext);
   } catch (error) {
-    const sourceFile = node.getSourceFile();
-    const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.pos);
-    throw new TypesmithCompilationError(
-      `Failed to transform node at: ${sourceFile.fileName}:${line + 1}:${character + 1}`,
-      error,
-    );
+    throw new TypesmithCompilationError(friendlyErrorMessageAtNode(node), error);
   }
   return ts.visitEachChild(
     transformedNode,
@@ -166,60 +169,69 @@ function getSourceFileDir(sourceFile: ts.SourceFile): string {
 }
 
 export function transformNode(node: ts.Node, visitorContext: PartialVisitorContext): ts.Node {
-  let start = visitorContext.perfDebugger ? performance.now() : NaN;
-  if (ts.isCallExpression(node)) {
-    const signature = visitorContext.checker.getResolvedSignature(node);
-    if (
-      signature !== undefined &&
-      signature.declaration !== undefined &&
-      getSourceFileDir(signature.declaration.getSourceFile()) === visitorContext.declarationPath
-    ) {
-      const name = visitorContext.checker.getTypeAtLocation(signature.declaration).symbol.name;
-      if (name === "assertTypeFn" && node.typeArguments !== undefined && node.typeArguments.length === 1) {
-        const typeArgument = node.typeArguments[0];
-        const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
+  try {
+    let start = visitorContext.perfDebugger ? performance.now() : NaN;
+    if (ts.isCallExpression(node)) {
+      const signature = visitorContext.checker.getResolvedSignature(node);
+      if (
+        signature !== undefined &&
+        signature.declaration !== undefined &&
+        getSourceFileDir(signature.declaration.getSourceFile()) === visitorContext.declarationPath
+      ) {
+        const name = visitorContext.checker.getTypeAtLocation(signature.declaration).symbol.name;
+        if (name === "assertTypeFn" && node.typeArguments !== undefined && node.typeArguments.length === 1) {
+          const typeArgument = node.typeArguments[0];
+          const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
 
-        const result = ts.updateCall(node, node.expression, node.typeArguments, [
-          ...node.arguments,
-          ts.createStringLiteral("\u2663"),
-          jsonToLiteralExpression(visitorContext.defaultValidationOptions),
-          jsonToLiteralExpression(typeNodeJsonSchema),
-        ]);
-        if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("assertTypeFn", performance.now() - start);
-        return result;
-      } else if (name == "Validatable") {
-        const decorator = node.parent;
-        if (ts.isDecorator(decorator)) {
-          const classDeclaration = decorator.parent;
-          if (ts.isClassDeclaration(classDeclaration)) {
-            const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, classDeclaration);
-            const result = ts.updateCall(node, node.expression, node.typeArguments, [
-              ...node.arguments,
-              ts.createStringLiteral("\u2663"),
-              jsonToLiteralExpression(visitorContext.defaultValidationOptions),
-              jsonToLiteralExpression(typeNodeJsonSchema),
-            ]);
-            if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("@Validatable", performance.now() - start);
-            return result;
+          const result = ts.updateCall(node, node.expression, node.typeArguments, [
+            ...node.arguments,
+            ts.createStringLiteral("\u2663"),
+            jsonToLiteralExpression(visitorContext.defaultValidationOptions),
+            jsonToLiteralExpression(typeNodeJsonSchema),
+          ]);
+          if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("assertTypeFn", performance.now() - start);
+          return result;
+        } else if (name == "Validatable") {
+          const decorator = node.parent;
+          if (ts.isDecorator(decorator)) {
+            const classDeclaration = decorator.parent;
+            if (ts.isClassDeclaration(classDeclaration)) {
+              const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, classDeclaration);
+              const result = ts.updateCall(node, node.expression, node.typeArguments, [
+                ...node.arguments,
+                ts.createStringLiteral("\u2663"),
+                jsonToLiteralExpression(visitorContext.defaultValidationOptions),
+                jsonToLiteralExpression(typeNodeJsonSchema),
+              ]);
+              if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("@Validatable", performance.now() - start);
+              return result;
+            }
           }
+
+          console.warn(`Typesmith: unexpected call "${name}"`);
         }
 
-        console.warn(`Typesmith: unexpected call "${name}"`);
+        // import * as Ajv from "ajv";
+        // var ajv = new Ajv({ sourceCode: true });
+        // const pack: any = require("ajv-pack");
+        // const type = visitorContext.checker.getTypeFromTypeNode(typeArgument);
+        // const typeValidateFn = ajv.compile(typeNodeJsonSchema);
+        // const typeValidateCode = pack(ajv, typeValidateFn);
+        // console.log(JSON.stringify(typeNodeJsonSchema, undefined, 2));
+        // console.log(typeValidateCode);
+        // const arrowFunction = createValidationArrowFunction(typeNodeJsonSchema);
       }
-
-      // import * as Ajv from "ajv";
-      // var ajv = new Ajv({ sourceCode: true });
-      // const pack: any = require("ajv-pack");
-      // const type = visitorContext.checker.getTypeFromTypeNode(typeArgument);
-      // const typeValidateFn = ajv.compile(typeNodeJsonSchema);
-      // const typeValidateCode = pack(ajv, typeValidateFn);
-      // console.log(JSON.stringify(typeNodeJsonSchema, undefined, 2));
-      // console.log(typeValidateCode);
-      // const arrowFunction = createValidationArrowFunction(typeNodeJsonSchema);
     }
+    if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("miss", performance.now() - start);
+    return node;
+  } catch (error) {
+    if (visitorContext.continueOnError) {
+      console.error(friendlyErrorMessageAtNode(node), error);
+    } else {
+      throw error;
+    }
+    return node;
   }
-  if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("miss", performance.now() - start);
-  return node;
 }
 
 export function createJsonSchemaOfNode(schemaGenerator: SchemaGenerator, rootNode: ts.Node) {
