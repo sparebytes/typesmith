@@ -44,7 +44,7 @@ export type PartialVisitorContext = {
 
 const baseSchemaGeneratorConfig: Config = {
   expose: "all", // "all" | "none" | "export";
-  topRef: false,
+  topRef: true,
   jsDoc: "extended", // "none" | "extended" | "basic";
   sortProps: true,
   strictTuples: true,

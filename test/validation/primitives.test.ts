@@ -4,7 +4,8 @@ import { assertTypeFn } from "../../dist";
 const INCORRECT: any = "_*INCORRECT*_";
 
 test("Simple String", t => {
-  const assertString = assertTypeFn<string>();
+  type MyString = string;
+  const assertString = assertTypeFn<MyString>();
 
   // Valid
   t.assert(assertString("Correct" as any).getOrElse(INCORRECT) === "Correct");
@@ -20,7 +21,8 @@ test("Simple String", t => {
 });
 
 test("Simple Number", t => {
-  const assertNumber = assertTypeFn<number>();
+  type MyNumber = number;
+  const assertNumber = assertTypeFn<MyNumber>();
 
   // Valid
   t.assert(assertNumber(1337 as any).getOrElse(INCORRECT) === 1337);
@@ -40,7 +42,8 @@ test("Simple Number", t => {
 test("Simple Integer", t => {
   /** @asType integer */
   type int = number;
-  const assertNumber = assertTypeFn<int>();
+  type MyInt = int;
+  const assertNumber = assertTypeFn<MyInt>();
 
   // Valid
   t.assert(assertNumber(1337 as any).getOrElse(INCORRECT) === 1337);
@@ -58,7 +61,8 @@ test("Simple Integer", t => {
 });
 
 test("Simple Boolean", t => {
-  const assertBoolean = assertTypeFn<boolean>();
+  type MyBoolean = boolean;
+  const assertBoolean = assertTypeFn<MyBoolean>();
 
   // Valid
   t.assert(assertBoolean(true as any).getOrElse(INCORRECT) === true);
