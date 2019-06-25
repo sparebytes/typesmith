@@ -8,6 +8,7 @@ import { TransformerPerformanceDebugger } from "./_transformer-performance-debug
 import { TypesmithCompilationError } from "../typesmith-errors";
 
 const defaultExtraJsonTags = [
+  "errorMessage",
   "typeof",
   "instanceOf",
   "range",
