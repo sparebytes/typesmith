@@ -1,5 +1,7 @@
 # typesmith
 
+<img align="right" alt="Typesmith logo" width="160" src="./docs/typesmith-logo.png" />
+
 Inspired by [typescript-is](https://www.npmjs.com/package/typescript-is).
 
 Transforms typescript interfaces, classes and other types into runtime validation functions. It leverages these fine libraries:
