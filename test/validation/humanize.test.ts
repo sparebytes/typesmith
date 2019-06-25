@@ -1,28 +1,5 @@
 import test from "ava";
-import { assertTypeFn, ErrorObject, humanizeErrorsToString } from "../../dist";
-
-export interface Name {
-  first: string;
-  last: string;
-  middle?: string | null;
-  title?: string | null;
-  suffix?: string | null;
-}
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-}
-
-export interface Person {
-  name: Name;
-  address: Address | null;
-  friends?: Person[];
-}
-
-export const assertPerson = assertTypeFn<Person>({ allErrors: true });
+import { ErrorObject, humanizeErrorsToString } from "../../dist";
 
 const errorsWithJsonNotation: ErrorObject[] = [
   {
