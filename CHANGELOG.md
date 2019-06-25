@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/sparebytes/typesmith/compare/v0.8.7...v0.9.0) (2019-06-25)
+
+
+### Bug Fixes
+
+* support recursive types better by using topRef ([8df278f](https://github.com/sparebytes/typesmith/commit/8df278f))
+
+
+### Features
+
+* add ajv-error support ([28410e9](https://github.com/sparebytes/typesmith/commit/28410e9))
+
+
+
 ### [0.8.7](https://github.com/sparebytes/typesmith/compare/v0.8.6...v0.8.7) (2019-06-25)
 
 
