@@ -68,7 +68,7 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
     type: baseSchemaGeneratorConfig.type,
   };
   const schemGeneratorNodeParser = createParser(program, schemGeneratorConfig);
-  const schemGeneratorTypeFormatter = createFormatter(schemGeneratorConfig);
+  const schemGeneratorTypeFormatter = createFormatter();
   const schemaGenerator = new SchemaGenerator(program, schemGeneratorNodeParser, schemGeneratorTypeFormatter);
 
   const declarationPath =

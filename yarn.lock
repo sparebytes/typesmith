@@ -4535,10 +4535,10 @@ trim-right@^1.0.1:
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
   integrity sha1-yy4SAwZ+DI3h9hQJS5/kVwTqYAM=
 
-ts-json-schema-generator@0.47.0:
-  version "0.47.0"
-  resolved "https://registry.yarnpkg.com/ts-json-schema-generator/-/ts-json-schema-generator-0.47.0.tgz#74c82ade204c7be3b4cefd3d8b0371809c0641ca"
-  integrity sha512-lAATfwDYnEXNzsKnUpb2AyIf869/WIwQElXcJgwZaiP8TOQVf+PBxix0FJM9G31urkf3evGxyZKkcARPjqzs7Q==
+ts-json-schema-generator@~0.50.1:
+  version "0.50.1"
+  resolved "https://registry.yarnpkg.com/ts-json-schema-generator/-/ts-json-schema-generator-0.50.1.tgz#5b09dd88499d9810715d336c9cb3d37dc50be552"
+  integrity sha512-T1hdPRM2gWy7NjOWOpwG+UD4loL/JdGkXps9R4OhpHbxunlS2qH9Ev+9yKGHyq5X/VkWlLDMNkyUAaBIORe0XQ==
   dependencies:
     commander "~2.20.0"
     glob "~7.1.4"

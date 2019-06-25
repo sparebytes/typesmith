@@ -132,24 +132,6 @@ Defaults must be provided to classes with generic type paramters. EG:
 @Validate() class Foo<A> {}
 ```
 
-### Class Constructor Properties
-
-Class properties declared in the constructor are ignored. EG
-```ts
-// Okay
-export class DataBox {
-  public data: any;
-  constructor(data: any) {
-    this.data = data;
-  }
-}
-
-// data property is ignored
-export class DataBox {
-  constructor(public data: any) {}
-}
-```
-
 ### Dates
 
 *TODO*
