@@ -101,7 +101,7 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
   return visitorContext;
 }
 
-export default function transformer(program: ts.Program, options?: { [Key: string]: any }): ts.TransformerFactory<ts.SourceFile> {
+export function createTransformer(program: ts.Program, options?: { [Key: string]: any }): ts.TransformerFactory<ts.SourceFile> {
   if (options && options.verbose) {
     console.log(
       `typesmith: transforming program with ${program.getSourceFiles().length} source files; using TypeScript ${ts.version}.`,
@@ -265,3 +265,5 @@ export function createJsonSchemaOfNode(schemaGenerator: SchemaGenerator, rootNod
 //     /*body*/ ts.createBlock([ts.createReturn(ts.createNumericLiteral("123"))]),
 //   );
 // }
+
+export default createTransformer;
