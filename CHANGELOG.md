@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.7](https://github.com/sparebytes/typesmith/compare/v0.8.6...v0.8.7) (2019-06-25)
+
+
+### Bug Fixes
+
+* **release:** add @types/nested-error-stacks to release dependencies ([c296e24](https://github.com/sparebytes/typesmith/commit/c296e24))
+
+
+
 ### [0.8.6](https://github.com/sparebytes/typesmith/compare/v0.8.5...v0.8.6) (2019-06-25)
 
 
