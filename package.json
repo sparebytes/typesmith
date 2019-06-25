@@ -41,6 +41,7 @@
     "standard-version": "standard-version"
   },
   "dependencies": {
+    "@types/nested-error-stacks": "^2.1.0",
     "ajv": "^6.10.0",
     "ajv-keywords": "^3.4.0",
     "json-schema": "^0.2.3",
@@ -52,7 +53,6 @@
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.3",
-    "@types/nested-error-stacks": "^2.1.0",
     "@types/node": "*",
     "ava": "^2.1.0",
     "concurrently": "^4.1.0",
