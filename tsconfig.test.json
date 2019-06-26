@@ -9,7 +9,7 @@
     "strict": true,
     "sourceMap": false,
     "declaration": false,
-    "plugins": [{ "transform": "./dist/transformer/index.js" }]
+    "plugins": [{ "transform": "./dist/transformer/index.js", "options": {} }]
   },
   "include": ["test/**/*.test.ts"]
 }

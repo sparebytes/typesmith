@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as ts from "typescript";
-import { transformNode, getVisitorContext } from "../src/transformer";
+import { transformNode, makeVisitorContext } from "../src/transformer";
 
 const configFilename = path.resolve("tsconfig.test.json");
 const configContent = ts.sys.readFile(configFilename);
@@ -28,8 +28,8 @@ if (inSourceFile == null) {
   throw new Error(`inSourceFile is null. Is "${inFile}" a valid path?`);
 }
 
-const visitorContext = getVisitorContext(program, { options: { continueOnError: true } });
-// const visitorContext = getVisitorContext(program, {
+const visitorContext = makeVisitorContext(program, { options: { continueOnError: true } });
+// const visitorContext = makeVisitorContext(program, {
 //   declarationPath: path.resolve(__dirname, "../src/transformable"),
 // });
 

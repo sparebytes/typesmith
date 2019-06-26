@@ -1,19 +1,21 @@
 import * as path from "path";
 import { performance } from "perf_hooks";
-import { Context, Definition, SchemaGenerator, StringMap } from "ts-json-schema-generator";
 import * as ts from "typescript";
 import { TypesmithCompilationError } from "../typesmith-errors";
 import { jsonToLiteralExpression } from "./json-to-literal-expression";
-import { getVisitorContext, VisitorContext } from "./visitor-context";
+import { makeVisitorContext, MakeVisitorContextTsOptions, VisitorContext } from "./visitor-context";
 
-export function createTransformer(program: ts.Program, options?: { [Key: string]: any }): ts.TransformerFactory<ts.SourceFile> {
+export function createTransformer(
+  program: ts.Program,
+  options?: MakeVisitorContextTsOptions,
+): ts.TransformerFactory<ts.SourceFile> {
   if (options && options.verbose) {
     console.log(
       `typesmith: transforming program with ${program.getSourceFiles().length} source files; using TypeScript ${ts.version}.`,
     );
   }
 
-  const visitorContext = getVisitorContext(program, options);
+  const visitorContext = makeVisitorContext(program, options);
 
   if (visitorContext.perfDebugger) visitorContext.perfDebugger.startEventPrinter();
   try {
@@ -86,7 +88,7 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
         const name = visitorContext.checker.getTypeAtLocation(signature.declaration).symbol.name;
         if (name === "assertTypeFn" && node.typeArguments !== undefined && node.typeArguments.length === 1) {
           const typeArgument = node.typeArguments[0];
-          const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
+          const typeNodeJsonSchema = visitorContext.createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
 
           const result = ts.updateCall(node, node.expression, node.typeArguments, [
             ...node.arguments,
@@ -101,7 +103,7 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
           if (ts.isDecorator(decorator)) {
             const classDeclaration = decorator.parent;
             if (ts.isClassDeclaration(classDeclaration)) {
-              const typeNodeJsonSchema = createJsonSchemaOfNode(visitorContext.schemaGenerator, classDeclaration);
+              const typeNodeJsonSchema = visitorContext.createJsonSchemaOfNode(visitorContext.schemaGenerator, classDeclaration);
               const result = ts.updateCall(node, node.expression, node.typeArguments, [
                 ...node.arguments,
                 ts.createStringLiteral("\u2663"),
@@ -137,18 +139,6 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
     }
     return node;
   }
-}
-
-export function createJsonSchemaOfNode(schemaGenerator: SchemaGenerator, rootNode: ts.Node) {
-  const sg: any = schemaGenerator;
-  const rootNodes = [rootNode];
-  const rootTypes = rootNodes.map(rootNode => {
-    return sg.nodeParser.createType(rootNode, new Context());
-  });
-  const rootTypeDefinition = rootTypes.length === 1 ? sg.getRootTypeDefinition(rootTypes[0]) : {};
-  const definitions: StringMap<Definition> = {};
-  rootTypes.forEach(rootType => sg.appendRootChildDefinitions(rootType, definitions));
-  return { $schema: "http://json-schema.org/draft-07/schema#", ...rootTypeDefinition, definitions };
 }
 
 // export function createValidationArrowFunction(jsonSchema: any) {

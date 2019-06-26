@@ -1,7 +1,12 @@
 import * as path from "path";
-import { Config, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
+import { Config, createFormatter, createParser, PartialConfig, SchemaGenerator } from "ts-json-schema-generator";
 import * as ts from "typescript";
 import { AssertTypeOptions } from "../assert-types";
+import {
+  CreateJsonSchemaOfNode,
+  createJsonSchemaOfNode as defaultCreateJsonSchemaOfNode,
+  createNoopSchemaOfNode,
+} from "./create-json-schema-of-node";
 import { TransformerPerformanceDebugger } from "./_transformer-performance-debugger";
 
 const defaultExtraJsonTags = [
@@ -49,18 +54,36 @@ export type VisitorContext = {
   defaultValidationOptions: AssertTypeOptions;
   perfDebugger?: TransformerPerformanceDebugger | null;
   continueOnError: boolean;
+  createJsonSchemaOfNode: CreateJsonSchemaOfNode;
 };
 
-export function getVisitorContext(program: ts.Program, options?: { [Key: string]: any }) {
-  const sgOptions = ((options && options.options) || {}) as Partial<Config>;
-  const extraJsonTags = Array.from(new Set([...defaultExtraJsonTags, ...(sgOptions.extraJsonTags || [])]));
+export interface MakeVisitorContextOptions extends Partial<AssertTypeOptions>, Partial<PartialConfig> {
+  declarationPath?: string;
+  continueOnError?: boolean;
+  debug?: {
+    performance?: number;
+  };
+  noop?: "noop" | null;
+}
+
+export interface MakeVisitorContextTsOptions {
+  createJsonSchemaOfNode?: CreateJsonSchemaOfNode;
+  options?: MakeVisitorContextOptions;
+  verbose?: boolean;
+}
+
+export function makeVisitorContext(program: ts.Program, _tsOptions?: MakeVisitorContextTsOptions) {
+  const tsOptions: MakeVisitorContextTsOptions = _tsOptions || {};
+  const options = tsOptions.options || {};
+
+  const extraJsonTags = Array.from(new Set([...defaultExtraJsonTags, ...(options.extraJsonTags || [])]));
   const schemGeneratorConfig: Config = {
-    expose: sgOptions.expose != null ? sgOptions.expose : baseSchemaGeneratorConfig.expose,
-    topRef: sgOptions.topRef != null ? sgOptions.topRef : baseSchemaGeneratorConfig.topRef,
-    jsDoc: sgOptions.jsDoc != null ? sgOptions.jsDoc : baseSchemaGeneratorConfig.jsDoc,
-    sortProps: sgOptions.sortProps != null ? sgOptions.sortProps : baseSchemaGeneratorConfig.sortProps,
-    strictTuples: sgOptions.strictTuples != null ? sgOptions.strictTuples : baseSchemaGeneratorConfig.strictTuples,
-    skipTypeCheck: sgOptions.skipTypeCheck != null ? sgOptions.skipTypeCheck : baseSchemaGeneratorConfig.skipTypeCheck,
+    expose: options.expose != null ? options.expose : baseSchemaGeneratorConfig.expose,
+    topRef: options.topRef != null ? options.topRef : baseSchemaGeneratorConfig.topRef,
+    jsDoc: options.jsDoc != null ? options.jsDoc : baseSchemaGeneratorConfig.jsDoc,
+    sortProps: options.sortProps != null ? options.sortProps : baseSchemaGeneratorConfig.sortProps,
+    strictTuples: options.strictTuples != null ? options.strictTuples : baseSchemaGeneratorConfig.strictTuples,
+    skipTypeCheck: options.skipTypeCheck != null ? options.skipTypeCheck : baseSchemaGeneratorConfig.skipTypeCheck,
     extraJsonTags: extraJsonTags,
     path: baseSchemaGeneratorConfig.path,
     type: baseSchemaGeneratorConfig.type,
@@ -70,16 +93,15 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
   const schemaGenerator = new SchemaGenerator(program, schemGeneratorNodeParser, schemGeneratorTypeFormatter);
 
   const declarationPath =
-    options != null && options.options != null && typeof options.options.declarationPath === "string"
-      ? options.options.declarationPath
+    typeof options.declarationPath === "string"
+      ? options.declarationPath
       : path.resolve(path.join(__dirname, "..", "transformable"));
 
-  const vOptions = ((options && options.options) || {}) as AssertTypeOptions;
   const defaultValidationOptions: AssertTypeOptions = {};
-  if ("removeAdditional" in vOptions) defaultValidationOptions.removeAdditional = vOptions.removeAdditional;
-  if ("useDefaults" in vOptions) defaultValidationOptions.useDefaults = vOptions.useDefaults;
-  if ("coerceTypes" in vOptions) defaultValidationOptions.coerceTypes = vOptions.coerceTypes;
-  if ("lazyCompile" in vOptions) defaultValidationOptions.lazyCompile = vOptions.lazyCompile;
+  if ("removeAdditional" in options) defaultValidationOptions.removeAdditional = options.removeAdditional;
+  if ("useDefaults" in options) defaultValidationOptions.useDefaults = options.useDefaults;
+  if ("coerceTypes" in options) defaultValidationOptions.coerceTypes = options.coerceTypes;
+  if ("lazyCompile" in options) defaultValidationOptions.lazyCompile = options.lazyCompile;
 
   const visitorContext: VisitorContext = {
     program,
@@ -87,10 +109,15 @@ export function getVisitorContext(program: ts.Program, options?: { [Key: string]
     schemaGenerator: schemaGenerator,
     declarationPath: declarationPath,
     defaultValidationOptions: defaultValidationOptions,
-    continueOnError: (options && options.options && options.options.continueOnError) || false,
+    continueOnError: options.continueOnError || false,
+    createJsonSchemaOfNode: tsOptions.createJsonSchemaOfNode
+      ? tsOptions.createJsonSchemaOfNode
+      : options.noop === "noop"
+      ? createNoopSchemaOfNode
+      : defaultCreateJsonSchemaOfNode,
   };
 
-  const oDebug = (options && options.options && options.options.debug) || {};
+  const oDebug = options.debug || {};
   if (typeof oDebug.performance === "number") {
     // console.log(`typesmith transformer performance debugging enabled every ${oDebug.performance}ms.`);
     visitorContext.perfDebugger = new TransformerPerformanceDebugger(oDebug.performance);
