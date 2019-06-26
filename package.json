@@ -1,6 +1,6 @@
 {
   "name": "typesmith",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "private": false,
   "author": "Franklin Davenport <sparebytes@gmail.com>",
   "description": "Runtime Validation Made Easy",
