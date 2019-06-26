@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.1](https://github.com/sparebytes/typesmith/compare/v0.9.0...v0.9.1) (2019-06-26)
+
+
+### Tests
+
+* add class-methods test ([5397e60](https://github.com/sparebytes/typesmith/commit/5397e60))
+
+
+
 ## [0.9.0](https://github.com/sparebytes/typesmith/compare/v0.8.7...v0.9.0) (2019-06-25)
 
 
