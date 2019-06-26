@@ -1,4 +1,4 @@
-# typesmith
+# Typesmith: Easy Runtime Validation 
 
 <img align="right" alt="Typesmith logo" width="160" src="./docs/typesmith-logo.png" />
 
