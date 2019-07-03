@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.5](https://github.com/sparebytes/typesmith/compare/v0.9.4...v0.9.5) (2019-07-03)
+
+
+### Bug Fixes
+
+* using coerceTypes with anyOf should not coerce nullable values ([a22d779](https://github.com/sparebytes/typesmith/commit/a22d779))
+
+
+### Tests
+
+* buffer test is no longer broken (but still an issue) ([b58f22b](https://github.com/sparebytes/typesmith/commit/b58f22b))
+
+
+
 ### [0.9.4](https://github.com/sparebytes/typesmith/compare/v0.9.3...v0.9.4) (2019-06-26)
 
 
