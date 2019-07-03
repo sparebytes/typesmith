@@ -17,7 +17,9 @@ export function createJsonSchemaOfNode(schemaGenerator: SchemaGenerator, rootNod
   return schema;
 }
 
-export function createNoopSchemaOfNode(schemaGenerator: SchemaGenerator, rootNode: ts.Node) {}
+export function createNoopSchemaOfNode(schemaGenerator: SchemaGenerator, rootNode: ts.Node) {
+  return true;
+}
 
 /**
  * Mutates the schema into a more consistent structure

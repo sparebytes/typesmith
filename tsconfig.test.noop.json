@@ -9,8 +9,7 @@
     "strict": true,
     "sourceMap": false,
     "declaration": false,
-    "plugins": [{ "transform": "./dist/transformer/index.js", "options": {} }]
+    "plugins": [{ "transform": "./dist/transformer/noop.js", "options": {} }]
   },
-  "include": ["test/**/*.test.ts"],
-  "exclude": ["test/noop/**/*.ts"]
+  "include": ["test/noop/**/*.test.ts"]
 }
