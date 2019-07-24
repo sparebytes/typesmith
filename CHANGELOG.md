@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.7](https://github.com/sparebytes/typesmith/compare/v0.9.6...v0.9.7) (2019-07-24)
+
+
+
 ### [0.9.6](https://github.com/sparebytes/typesmith/compare/v0.9.5...v0.9.6) (2019-07-03)
 
 
