@@ -39,4 +39,5 @@ test.serial("Speed", t => {
   const avgTimeMax = 0.01; // Honestly the timing should be well below this number.
 
   t.assert(avgTimeMax > avgTime, `Average time must be below ${avgTimeMax}ms but was ${avgTime}`);
+  t.log(`Avg Time is ${avgTime}ms for ${count} iterations.`);
 });

@@ -1,5 +1,5 @@
 import * as path from "path";
-import { Config, createFormatter, createParser, PartialConfig, SchemaGenerator } from "ts-json-schema-generator";
+import { Config, createFormatter, createParser, SchemaGenerator } from "ts-json-schema-generator";
 import * as ts from "typescript";
 import { AssertTypeOptions } from "../assert-types";
 import {
@@ -57,7 +57,7 @@ export type VisitorContext = {
   createJsonSchemaOfNode: CreateJsonSchemaOfNode;
 };
 
-export interface MakeVisitorContextOptions extends Partial<AssertTypeOptions>, Partial<PartialConfig> {
+export interface MakeVisitorContextOptions extends Partial<AssertTypeOptions>, Partial<Config> {
   declarationPath?: string;
   continueOnError?: boolean;
   debug?: {
