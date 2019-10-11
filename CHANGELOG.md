@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.8](https://github.com/sparebytes/typesmith/compare/v0.9.7...v0.9.8) (2019-10-11)
+
+
+### Bug Fixes
+
+* recursive inline types work as expected since upgrading dependencies
+
+
+### Tests
+
+* ensure intersection and union types are handled properly
+* add additional tests for coercing nullable properties
+
+
+
 ### [0.9.7](https://github.com/sparebytes/typesmith/compare/v0.9.6...v0.9.7) (2019-07-24)
 
 
