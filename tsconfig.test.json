@@ -12,5 +12,5 @@
     "plugins": [{ "transform": "./dist/transformer/index.js", "options": {} }]
   },
   "include": ["test/**/*.test.ts"],
-  "exclude": ["test/noop/**/*.ts"]
+  "exclude": ["test/noop/**/*.ts", "test/cannot-compile/**/*.ts"]
 }
