@@ -101,13 +101,13 @@ assertTypeFn<{ name: string }>({ coerceTypes: true });
   @Validatable()
   export class PersonSearchRequest extends SearchRequestOf(PersonFilters) {}
   ```
-- Anonymous recursive generic types:
+- ~~Anonymous recursive generic types:~~
   ```ts
   // Okay
   type NumberBTree = BTree<number>;
   assertTypeFn<NumberBTree>();
   
-  // Crashes
+  // (Works as of v0.9.8)
   assertTypeFn<BTree<number>>();
   ```
 
