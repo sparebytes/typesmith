@@ -35,7 +35,7 @@ test("Strings Valid", t => {
   }
 });
 
-test("Class Type Json Invalid", t => {
+test("Strings Invalid", t => {
   const foos = [
     { minLength: "" },
     { minLength: "1" },
