@@ -109,7 +109,7 @@ export function makeVisitorContext(program: ts.Program, _tsOptions?: MakeVisitor
     schemaGenerator: schemaGenerator,
     declarationPath: declarationPath,
     defaultValidationOptions: defaultValidationOptions,
-    continueOnError: options.continueOnError || false,
+    continueOnError: options.continueOnError ?? true,
     createJsonSchemaOfNode: tsOptions.createJsonSchemaOfNode
       ? tsOptions.createJsonSchemaOfNode
       : options.noop === "noop"

@@ -133,12 +133,14 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
     return node;
   } catch (error) {
     if (visitorContext.continueOnError) {
+      console.error("\n\nTypesmith Compilation Error\n\n");
       console.error(friendlyErrorMessageAtNode(node), error);
+      console.error("\n\nTypesmith: You may wish to restart your compiler\n\n");
     } else {
       throw error;
     }
-    return node;
   }
+  return node;
 }
 
 // export function createValidationArrowFunction(jsonSchema: any) {
