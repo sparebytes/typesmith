@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../../dist";
+import { assertTypeFn } from "../../dist/src";
 
 test("Simple", t => {
   /** @errorMessage "simple error message" */

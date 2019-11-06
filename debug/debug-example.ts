@@ -1,4 +1,4 @@
-import { assertTypeFn, Validatable } from "../src";
+import { assertTypeFn, Validatable } from "../dist/src";
 
 export type NumberArray = number[];
 export const assertNumberArray = assertTypeFn<NumberArray>();

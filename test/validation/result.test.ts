@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn, DateString } from "../../dist";
+import { assertTypeFn, DateString } from "../../dist/src";
 
 interface Person {
   firstName: string;

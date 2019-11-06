@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn, DateInstance, DateTimeFlex, DateTimeString } from "../../dist";
+import { assertTypeFn, DateInstance, DateTimeFlex, DateTimeString } from "../../dist/src";
 import { Box } from "../example-types/box";
 
 const dateObject = new Date();

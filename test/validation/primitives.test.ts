@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../../dist";
+import { assertTypeFn } from "../../dist/src";
 
 const INCORRECT: any = "_*INCORRECT*_";
 

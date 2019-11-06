@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../../dist";
+import { assertTypeFn } from "../../dist/src";
 import { BTree } from "../example-types/b-tree";
 
 // A runtime error is thrown when AJV compiles the validation because the generated JSON Schema is invalid.

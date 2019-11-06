@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn, Int } from "../../dist";
+import { assertTypeFn, Int } from "../../dist/src";
 
 interface MyBox {
   value: Int | null;

@@ -1,5 +1,5 @@
 import test from "ava";
-import { ErrorObject, humanizeErrorsToString } from "../../dist";
+import { ErrorObject, humanizeErrorsToString } from "../../dist/src";
 
 const errorsWithJsonNotation: ErrorObject[] = [
   {

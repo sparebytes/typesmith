@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn } from "../../dist";
+import { assertTypeFn } from "../../dist/src";
 
 test("NOOP: Everything validates under NOOP Transform", t => {
   interface MyBox {

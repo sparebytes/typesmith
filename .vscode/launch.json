@@ -19,10 +19,10 @@
             ],
             "sourceMaps": true,
             "smartStep": true,
-            // "skipFiles": [
-            //     "<node_internals>/**/*.js",
-            //     "node_modules/**/*.js",
-            // ]
+            "skipFiles": [
+                "<node_internals>/**/*.js",
+                "node_modules/**/*.js",
+            ]
         },
         {
             "name": "Build - Attach",
@@ -35,10 +35,11 @@
             "cwd": "${workspaceRoot}",
             "sourceMaps": true,
             "smartStep": true,
-            // "skipFiles": [
-            //     "<node_internals>/**/*.js",
-            //     "node_modules/**/*.js",
-            // ]
+            "skipFiles": [
+                "<node_internals>/**/*.js",
+                "node_modules/**/*.js",
+            ]
         },
     ]
 }
+

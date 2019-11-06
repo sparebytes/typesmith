@@ -5,12 +5,13 @@
     "lib": ["es6"],
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "strict": true,
     "sourceMap": true,
-    "declaration": true,
-    "outDir": "dist",
-    "composite": true
+    "declaration": false
   },
-  "include": ["src/**/*.ts"]
+  "include": ["debug/**/debug.ts"],
+  "references": [
+      { "path": "./tsconfig.json" }
+  ]
 }

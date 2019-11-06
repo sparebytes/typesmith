@@ -1,5 +1,5 @@
 import test from "ava";
-import { getValidatableFn, Validatable, assertTypeAssign } from "../../dist";
+import { getValidatableFn, Validatable, assertTypeAssign } from "../../dist/src";
 
 @Validatable()
 class ThingyA<A = any> {

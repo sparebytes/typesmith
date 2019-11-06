@@ -1,5 +1,5 @@
 import test from "ava";
-import { assertTypeFn, TypesmithValidationError } from "../../dist";
+import { assertTypeFn, TypesmithValidationError } from "../../dist/src";
 
 test("Unwrap Error", t => {
   interface Simple {}

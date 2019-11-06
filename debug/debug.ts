@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as ts from "typescript";
-import { transformNode, makeVisitorContext } from "../src/transformer";
+import { transformNode, makeVisitorContext } from "../dist/src/transformer/index";
 
 const configFilename = path.resolve("tsconfig.test.json");
 const configContent = ts.sys.readFile(configFilename);
