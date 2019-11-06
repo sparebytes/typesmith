@@ -21,7 +21,7 @@
     "clean": "rimraf dist/* src/**/*.{js,js.map,d.ts}",
     "build": "yarn run clean && yarn run build:once",
     "build:once": "tsc --project tsconfig.json",
-    "build:release": "yarn build && cpx {README.md,LICENSE} dist && package-json-reducer -s \"scripts devDependencies\" -o dist/package.json package.json",
+    "build:release": "yarn build && cpx {README.md,LICENSE} dist/src && package-json-reducer -s \"scripts devDependencies\" -o dist/src/package.json package.json",
     "build:watch": "tsc --project tsconfig.json --watch",
     "debug:old": "node -r ts-node/register/transpile-only --inspect=127.0.0.1:43926 --inspect-brk ./debug/debug.ts",
     "debug": "tsc-watch --project tsconfig.debug.json --noClear --onSuccess \"node --inspect=127.0.0.1:43926 ./debug/debug.js\"",
@@ -42,7 +42,7 @@
     "noop:run": "ava --match \"NOOP:*\" --verbose",
     "noop:complete": "yarn test:complete && yarn run noop:build && yarn run noop:run",
     "dev": "concurrently -c \"bgYellow,green\" -n \"bld,tst\" \"yarn run build:watch\" \"yarn run test:watch\"",
-    "release": "yarn build:release && yarn test && git push --follow-tags origin master && cd dist && npm publish",
+    "release": "yarn build:release && yarn test && git push --follow-tags origin master && cd ./dist/src && npm publish",
     "prepublishOnly": "node do-not-run-publish-here___publish-the-dist-folder-instead",
     "standard-version": "standard-version"
   },
