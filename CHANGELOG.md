@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0-rc.2](https://github.com/sparebytes/typesmith/compare/v0.10.0-rc.1...v0.10.0-rc.2) (2019-11-16)
+
+
+### Bug Fixes
+
+* **transformer:** fix issue where type information is lost if typesmith plugin is set to "after" ([327e467](https://github.com/sparebytes/typesmith/commit/327e46797b592308287568b3f4fa5d15962109c2))
+
 ## [0.10.0-rc.1](https://github.com/sparebytes/typesmith/compare/v0.10.0-rc.0...v0.10.0-rc.1) (2019-11-06)
 
 ## [0.10.0-rc.0](https://github.com/sparebytes/typesmith/compare/v0.9.8...v0.10.0-rc.0) (2019-11-06)
