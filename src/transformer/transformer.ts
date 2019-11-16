@@ -29,8 +29,13 @@ export function createTransformer(
 
 function friendlyErrorMessageAtNode(node: ts.Node): string {
   const sourceFile = node.getSourceFile();
-  const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.pos);
-  return `Failed to transform node at: ${sourceFile.fileName}:${line + 1}:${character + 1}`;
+  if (sourceFile) {
+    const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.pos);
+    return `Failed to transform node at: ${sourceFile.fileName}:${line + 1}:${character + 1}`;
+  }
+  else {
+    return `Failed to transform node at: <unknown-source-file>`;
+  }
 }
 
 function transformNodeAndChildren(
@@ -80,24 +85,29 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
     let start = visitorContext.perfDebugger ? performance.now() : NaN;
     if (ts.isCallExpression(node)) {
       const signature = visitorContext.checker.getResolvedSignature(node);
-      if (
-        signature !== undefined &&
-        signature.declaration !== undefined &&
-        getSourceFileDir(signature.declaration.getSourceFile()) === visitorContext.declarationPath
-      ) {
-        const name = visitorContext.checker.getTypeAtLocation(signature.declaration).symbol.name;
-        if (name === "assertTypeFn" && node.typeArguments !== undefined && node.typeArguments.length === 1) {
-          const typeArgument = node.typeArguments[0];
-          const typeNodeJsonSchema = visitorContext.createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
+      const declaration = signature?.declaration;
+      const declarationSourceDir = declaration && getSourceFileDir(declaration.getSourceFile());
 
-          const result = ts.updateCall(node, node.expression, node.typeArguments, [
-            ...node.arguments,
-            ts.createStringLiteral("\u2663"),
-            jsonToLiteralExpression(visitorContext.defaultValidationOptions),
-            jsonToLiteralExpression(typeNodeJsonSchema),
-          ]);
-          if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("assertTypeFn", performance.now() - start);
-          return result;
+      if (declaration != null && declarationSourceDir === visitorContext.declarationPath) {
+        const name = visitorContext.checker.getTypeAtLocation(declaration).symbol.name;
+        if (name === "assertTypeFn") {
+          const typeArguments = node.typeArguments ?? ((node as any).original as ts.CallExpression | undefined)?.typeArguments;
+          if (typeArguments !== undefined && typeArguments.length === 1) {
+            const typeArgument = typeArguments[0];
+            const typeNodeJsonSchema = visitorContext.createJsonSchemaOfNode(visitorContext.schemaGenerator, typeArgument);
+
+            const result = ts.updateCall(node, node.expression, node.typeArguments, [
+              ...node.arguments,
+              ts.createStringLiteral("\u2663"),
+              jsonToLiteralExpression(visitorContext.defaultValidationOptions),
+              jsonToLiteralExpression(typeNodeJsonSchema),
+            ]);
+            if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("assertTypeFn", performance.now() - start);
+            return result;
+          }
+          else {
+            throw new Error(`assertTypeFn<T>: Expected 1 Generic Type but ${node?.typeArguments?.length ?? 0} were found.`);
+          }
         } else if (name == "Validatable") {
           const decorator = node.parent;
           if (ts.isDecorator(decorator)) {
@@ -115,7 +125,12 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
             }
           }
 
-          console.warn(`Typesmith: unexpected call "${name}"`);
+          throw new Error(`Typesmith: @Validatable() is invalid.`);
+        }
+        else {
+          // console.error("\n\nTypesmith Compilation Error\n\n");
+          // console.error(friendlyErrorMessageAtNode(node), `Unexpected call to ${name}.`);
+          // console.error("\n\nTypesmith: You may wish to restart your compiler\n\n");
         }
 
         // import * as Ajv from "ajv";
@@ -132,15 +147,15 @@ export function transformNode(node: ts.Node, visitorContext: VisitorContext): ts
     if (visitorContext.perfDebugger) visitorContext.perfDebugger.logEvent("miss", performance.now() - start);
     return node;
   } catch (error) {
+    console.error("\n\nTypesmith Compilation Error\n\n");
+    console.error(friendlyErrorMessageAtNode(node), error);
+    console.error("\n\nTypesmith: You may wish to restart your compiler\n\n");
     if (visitorContext.continueOnError) {
-      console.error("\n\nTypesmith Compilation Error\n\n");
-      console.error(friendlyErrorMessageAtNode(node), error);
-      console.error("\n\nTypesmith: You may wish to restart your compiler\n\n");
+      return node;
     } else {
       throw error;
     }
   }
-  return node;
 }
 
 // export function createValidationArrowFunction(jsonSchema: any) {

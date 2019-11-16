@@ -9,8 +9,12 @@
     "strict": true,
     "sourceMap": false,
     "declaration": false,
-    "plugins": [{ "transform": "./dist/src/transformer/index.js", "options": {} }]
+    "plugins": [{ "transform": "./dist/src/transformer/index.js", "after": true, "options": {} }],
+    "incremental": false
   },
+  "references": [
+      { "path": "./tsconfig.json" }
+  ],
   "include": ["test/**/*.test.ts"],
   "exclude": ["test/noop/**/*.ts", "test/cannot-compile/**/*.ts"]
 }

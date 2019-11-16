@@ -2,7 +2,7 @@ import { AssertTypeResult, AssertTypeFn } from "./assert-types";
 import { getValidatableFn } from "./validatable-util";
 
 /**
- * returns a function that to validate an object and return a new instance of `clazz`
+ * returns a function for validating an object and returning a new instance of `clazz`
  *
  * `clazz` must have the `@Validatable()` decorator
  *

@@ -39,3 +39,4 @@ function visitNodeAndChildren(node: ts.Node) {
 }
 
 visitNodeAndChildren(inSourceFile);
+console.log("transformation done.");

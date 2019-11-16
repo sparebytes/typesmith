@@ -30,7 +30,7 @@ Transforms typescript interfaces, classes and other types into runtime validatio
    ```json
    {
      "compilerOptions": {
-       "plugins": [{ "transform": "typesmith/transformer" }]
+       "plugins": [{ "transform": "typesmith/transformer", "after": true }]
      }
    }
    ```
